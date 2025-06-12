@@ -3,15 +3,16 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput))]
-public class Paddle : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float speed = 5f;        // Paddle movement speed
     [SerializeField] private float boundY = 3.8f;     // Vertical boundary limit
     private Vector2 moveInput;
+    public InputAction playerControls;
 
     private void Start()
     {
-        
+
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

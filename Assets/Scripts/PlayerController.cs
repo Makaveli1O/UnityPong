@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float speed = 5f;        // Paddle movement speed
     [SerializeField] private float boundY = 3.8f;     // Vertical boundary limit
+    [SerializeField] private float dashPower = 10f;
     private Rigidbody2D _rb;
     private PlayerControls playerControls;
 
@@ -24,6 +25,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnDash()
     {
-        _rb.AddForce(Vector2.right * 10f, ForceMode2D.Impulse);
+        _rb.AddForce(Vector2.right * dashPower, ForceMode2D.Impulse);
     }
 }

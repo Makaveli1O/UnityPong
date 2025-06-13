@@ -1,39 +1,29 @@
-using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
-[RequireComponent(typeof(PlayerInput))]
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float speed = 5f;        // Paddle movement speed
     [SerializeField] private float boundY = 3.8f;     // Vertical boundary limit
-    private Vector2 moveInput;
-    public InputAction playerControls;
+    private Rigidbody2D _rb;
+    private PlayerControls playerControls;
 
-    private void Start()
+    private void Awake()
     {
-
+        playerControls = new PlayerControls();
+        _rb = GetComponent<Rigidbody2D>();
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void OnMove(InputValue value)
+    private void OnMove(InputValue value)
     {
-        moveInput = value.Get<Vector2>();
+        var movementVector = value.Get<Vector2>();
+        _rb.linearVelocity = movementVector * speed;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDash()
     {
-        // Calculate new position using the y component of the input
-        Vector2 paddlePosition = transform.position;
-        paddlePosition.y += moveInput.y * speed * Time.deltaTime;
-        
-        // Clamp the paddle position to stay within bounds
-        paddlePosition.y = Mathf.Clamp(paddlePosition.y, -boundY, boundY);
-        
-        // Update paddle position
-        transform.position = paddlePosition;
-
-
+        _rb.AddForce(Vector2.right * 10f, ForceMode2D.Impulse);
     }
 }

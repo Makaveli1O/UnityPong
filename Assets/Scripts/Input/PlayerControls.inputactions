@@ -15,10 +15,10 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Dash",
-                    "type": "Button",
+                    "name": "Rotate",
+                    "type": "Value",
                     "id": "489978b5-35e1-47b9-b69a-7d94105f7c45",
-                    "expectedControlType": "",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -59,15 +59,37 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "",
-                    "id": "49b26a5a-38b6-4442-8191-d24ab2fea7d3",
-                    "path": "<Keyboard>/space",
+                    "name": "2D Vector",
+                    "id": "dfca7622-22da-4a6d-8511-48a4e4d9ad11",
+                    "path": "2DVector",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Dash",
-                    "isComposite": false,
+                    "action": "Rotate",
+                    "isComposite": true,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "left",
+                    "id": "2de46b25-77ad-4b49-a554-71b1119d6529",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "f898b3aa-be05-4f24-b51c-329d48deb161",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }

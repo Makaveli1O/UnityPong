@@ -1,23 +1,33 @@
-using Unity.VisualScripting.Dependencies.NCalc;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float speed = 5f;        // Paddle movement speed
-    private PlayerControls playerControls;
+    [SerializeField] private GameObject _paddlePrefab;
+    private GameObject _paddleInstance;
+    private IPaddleBehaviour _paddle;
+    private PlayerControls _playerControls;
     private Vector2 _movementVector;
-    private float _paddleAngle = 0f;
+
     private float _verticalBoundary;
 
     private void Awake()
     {
-        playerControls = new PlayerControls();
+        _playerControls = new PlayerControls();
+        if (_paddlePrefab == null)
+        {
+            //Throw exception if paddle prefab is not assigned
+            throw new Exception("IPaddleBehaviour not implemented on the paddle GameObject.");
+        }
     }
 
     void Start()
     {
         _verticalBoundary = CalculateYBoundary();
+        _paddleInstance = Instantiate(_paddlePrefab, transform.position, Quaternion.identity, transform);
+        _paddle = _paddleInstance.GetComponent<IPaddleBehaviour>();
     }
 
     private void Update()
@@ -25,14 +35,28 @@ public class PlayerController : MonoBehaviour
         // Movement
         Vector2 currentPosition = transform.position;
 
-        currentPosition.y += _movementVector.y * speed * Time.deltaTime;
+        currentPosition.y += _movementVector.y * _paddle.Speed * Time.deltaTime;
         transform.position = currentPosition;
 
         // Boundary check
         ClampToVerticalBounds();
+    }
 
-        //Rotation
-        transform.rotation = Quaternion.Euler(0, 0, _paddleAngle);
+    public void OnMove(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed)
+        {
+            _movementVector = ctx.ReadValue<Vector2>();
+        }
+        else if (ctx.canceled)
+        {
+            _movementVector = Vector2.zero;
+        }
+    }
+
+    public void OnRotate(InputAction.CallbackContext ctx)
+    {
+        _paddle.Action(ctx);
     }
 
     private void ClampToVerticalBounds()
@@ -45,41 +69,7 @@ public class PlayerController : MonoBehaviour
     private float CalculateYBoundary()
     {
         float camHeight = Camera.main.orthographicSize;
-        float halfPaddleHeight = GetComponent<SpriteRenderer>().bounds.extents.y;
+        float halfPaddleHeight = _paddlePrefab.GetComponent<SpriteRenderer>().bounds.extents.y;
         return camHeight - halfPaddleHeight;
-    }
-
-    public void OnMove(InputAction.CallbackContext ctx)
-    {
-        if (ctx.performed)
-        {
-            _movementVector = ctx.ReadValue<Vector2>();
-        }
-
-        if (ctx.canceled)
-        {
-            _movementVector = Vector2.zero;
-        }
-    }
-
-    public void OnRotate(InputAction.CallbackContext ctx)
-    {
-        if (ctx.performed)
-        {
-            Vector2 rotationInput = ctx.ReadValue<Vector2>();
-            if (rotationInput.Equals(Vector2.right))
-            {
-                _paddleAngle = 45f;
-            }
-            else if (rotationInput.Equals(Vector2.left))
-            {
-                _paddleAngle = -45f;
-            }
-        }
-
-        if (ctx.canceled)
-        {
-            _paddleAngle = 0f;
-        }
     }
 }

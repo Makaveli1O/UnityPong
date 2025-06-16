@@ -1323,9 +1323,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2e798d90c2c4309b93e919d1de086e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialSpeed: 50
-  maxSpeed: 10
-  speed: 200
 --- !u!1 &531256465
 GameObject:
   m_ObjectHideFlags: 0
@@ -1905,10 +1902,9 @@ GameObject:
   - component: {fileID: 1434872592}
   - component: {fileID: 1434872593}
   - component: {fileID: 1434872594}
-  - component: {fileID: 1434872595}
   m_Layer: 3
   m_Name: Player1
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1926,7 +1922,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: 9bef3a8ebf53898439490fc287e37912, type: 3}
-  m_NotificationBehavior: 0
+  m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -1954,6 +1950,22 @@ MonoBehaviour:
         m_CallState: 1
     m_ActionId: 9ba4a498-cb28-4a0a-a126-2586d2bf64b5
     m_ActionName: 'Base/MoveUp[/Keyboard/w]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1434872593}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnRotate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+    m_ActionId: 489978b5-35e1-47b9-b69a-7d94105f7c45
+    m_ActionName: 'Base/Dash[/Keyboard/space]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Base
@@ -2087,37 +2099,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f40284d144726b2ea95d0606f051aba6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
-  boundY: 3.8
-  dashPower: 30
---- !u!50 &1434872594
-Rigidbody2D:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1434872587}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 6200000, guid: 13d7f692a4d9a144ea0fa14d6783d279, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!114 &1434872595
+  _paddle: {fileID: 0}
+--- !u!114 &1434872594
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2126,7 +2109,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1434872587}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc8822505e6e9714386dc531c82ff4bf, type: 3}
+  m_Script: {fileID: 11500000, guid: 6d4845f37cfb5ea4bb7a361e19362c7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1497103551

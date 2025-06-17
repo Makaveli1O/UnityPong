@@ -1,15 +1,15 @@
 {
-    "name": "Tests",
+    "name": "IntegrationTests",
     "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Scripts",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Unity.InputSystem.IntegrationTests",
+        "Unity.InputSystem.TestFramework"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,

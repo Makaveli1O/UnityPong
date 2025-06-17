@@ -15,11 +15,6 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         _playerControls = new PlayerControls();
-        if (_paddlePrefab == null)
-        {
-            //Throw exception if paddle prefab is not assigned
-            throw new Exception("IPaddleBehaviour not implemented on the paddle GameObject.");
-        }
     }
 
     void Start()
@@ -27,6 +22,13 @@ public class PlayerController : MonoBehaviour
         _verticalBoundary = CalculateYBoundary();
         _paddleInstance = Instantiate(_paddlePrefab, transform.position, Quaternion.identity, transform);
         _paddle = _paddleInstance.GetComponent<IPaddleBehaviour>();
+
+        if (_paddle == null)
+        {
+            //Throw exception if paddle prefab is not assigned or component is not present
+            throw new Exception("IPaddleBehaviour not implemented on the paddle GameObject.");
+        }
+
     }
 
     private void Update()

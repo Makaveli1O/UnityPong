@@ -1,7 +1,6 @@
 using UnityEngine;
-namespace Assets.Scripts.Blocks
-{
-    public class Shape : MonoBehaviour
+namespace Assets.Scripts.Blocks{
+    public class BlockColour : MonoBehaviour
     {
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()

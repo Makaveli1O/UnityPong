@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Blocks
 {
-    public class Type : MonoBehaviour
+    public class BlockType : MonoBehaviour
     {
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()

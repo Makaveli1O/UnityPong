@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Assets.Scripts.Blocks
@@ -9,15 +10,15 @@ namespace Assets.Scripts.Blocks
         public Shape Shape { get; }
         public Colour Colour { get; }
         public Type Type { get; }
-        public Vector2 Position { get; }
+        public int2 Position { get; }
 
-    public BlockData(IBlockBehaviour blockBehaviour, Shape shape, Colour colour, Type type, Vector2 position)
-    {
-        BlockBehaviour = blockBehaviour;
-        Shape = shape;
-        Colour = colour;
-        Type = type;
-        Position = position;
-    }
+        public BlockData(IBlockBehaviour blockBehaviour, Shape shape, Colour colour, Type type, int2 position)
+        {
+            BlockBehaviour = blockBehaviour;
+            Shape = shape;
+            Colour = colour;
+            Type = type;
+            Position = position;
+        }
     }
 }

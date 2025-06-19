@@ -10,18 +10,20 @@ namespace Assets.Scripts.Blocks
         [SerializeField] private GameObject _blockPrefab;
         [SerializeField] private int _maxBlocks = 10;
         private int _currentBlockCount = 0;
+        private IBlockFactory _blockFactory;
 
-        void Start()
+        void Awake()
         {
-            if (_blockPrefab == null)
-            {
-                // Throw exception if block prefab is not assigned
-                throw new System.Exception("Block prefab is not assigned in the BlockSpawner.");
-            }
+
         }
 
         public Block SpawnBlock(BlockData blockData)
         {
+            if (_currentBlockCount >= _maxBlocks)
+            {
+                throw new System.Exception("Maximum block limit reached. Cannot spawn more blocks.");
+            }
+
             Vector2 position = PositionConvertor2D.ToVector2(blockData.Position);
             GameObject block_GO = Instantiate(_blockPrefab, position, Quaternion.identity, transform);
             Block block = block_GO.GetComponent<Block>();

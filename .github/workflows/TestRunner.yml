@@ -41,6 +41,11 @@ jobs:
           xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' \
           unity-editor -batchmode -nographics -projectPath . -runTests -testPlatform PlayMode -logfile -
 
+      - name: Run Unity tests
+        uses: game-ci/unity-test-runner@v4
+        with:
+          testMode: PlayMode
+
       # 5. Upload test results (if any)
       - name: Upload Test Results
         uses: actions/upload-artifact@v4

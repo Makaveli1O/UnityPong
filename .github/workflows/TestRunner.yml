@@ -1,54 +1,48 @@
 name: Test project
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: [push, pull_request]
 
 jobs:
-  test:
+  testAllModes:
+    name: Test in ${{ matrix.testMode }}
     runs-on: ubuntu-latest
-
+    strategy:
+      fail-fast: false
+      matrix:
+        projectPath:
+          - .
+        testMode:
+          - playmode
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # 1. Install necessary system dependencies for Unity in headless mode
-      - name: Install Unity dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libgtk-3-0 libnss3 libxss1 libglib2.0-0 libpulse0 xvfb
-
-      # 2. Clean up the Library folder to prevent cache corruption
-      - name: Clean Library folder
-        run: rm -rf Library/
-
-      # 3. Cache the Library folder (optional, if you use caching)
-      - name: Cache Library folder
-        uses: actions/cache@v4
+      - uses: actions/checkout@v4
         with:
-          path: ./Library
-          key: Library-${{ runner.os }}-${{ hashFiles('**/ProjectSettings/ProjectVersion.txt') }}
+          lfs: true
+      - uses: actions/cache@v3
+        with:
+          path: ${{ matrix.projectPath }}/Library
+          key: Library-${{ matrix.projectPath }}
           restore-keys: |
             Library-
-
-      # 4. Run Unity in headless mode using xvfb
-      - name: Run Unity tests
-        run: |
-          xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' \
-          unity-editor -batchmode -nographics -projectPath . -runTests -testPlatform PlayMode -logfile -
-
-      - name: Run Unity tests
-        uses: game-ci/unity-test-runner@v4
+      - uses: game-ci/unity-test-runner@v4
+        id: tests
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          testMode: PlayMode
-
-      # 5. Upload test results (if any)
-      - name: Upload Test Results
-        uses: actions/upload-artifact@v4
+          projectPath: ${{ matrix.projectPath }}
+          testMode: ${{ matrix.testMode }}
+          artifactsPath: ${{ matrix.testMode }}-artifacts
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: ${{ matrix.testMode }} Test Results
+          coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+my.assembly.*'
+      - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: TestResults
-          path: TestResults
+          name: Test results for ${{ matrix.testMode }}
+          path: ${{ steps.tests.outputs.artifactsPath }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Coverage results for ${{ matrix.testMode }}
+          path: ${{ steps.tests.outputs.coveragePath }}

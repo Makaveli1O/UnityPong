@@ -7,14 +7,17 @@ namespace Assets.Scripts.Blocks
 {
     public class BlockSpawner : MonoBehaviour
     {
-        [SerializeField] private GameObject _blockPrefab;
         [SerializeField] private int _maxBlocks = 10;
         private int _currentBlockCount = 0;
         private IBlockFactory _blockFactory;
 
         void Awake()
         {
-
+            _blockFactory = SimpleServiceLocator.Resolve<IBlockFactory>();
+            if (_blockFactory == null)
+            {
+                throw new System.Exception("BlockFactory service is not registered in the SimpleServiceLocator.");
+            }
         }
 
         public Block SpawnBlock(BlockData blockData)
@@ -24,10 +27,9 @@ namespace Assets.Scripts.Blocks
                 throw new System.Exception("Maximum block limit reached. Cannot spawn more blocks.");
             }
 
-            Vector2 position = PositionConvertor2D.ToVector2(blockData.Position);
-            GameObject block_GO = Instantiate(_blockPrefab, position, Quaternion.identity, transform);
-            Block block = block_GO.GetComponent<Block>();
+            Block block = _blockFactory.SpawnBlock(blockData, transform);
             _currentBlockCount++;
+
             return block;
         }
 

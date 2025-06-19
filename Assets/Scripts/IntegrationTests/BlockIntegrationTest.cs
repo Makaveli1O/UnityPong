@@ -16,18 +16,6 @@ public class BlockIntegrationTest
     [SetUp]
     public void SetUp()
     {
-        // Load the prefab
-        var blockPrefab = Resources.Load<GameObject>("Prefabs/Blocks/Block");
-        Assert.IsNotNull(blockPrefab, "Block prefab not found in Resources/Prefabs/Blocks/Block");
-
-        // Register a test-scoped factory to the ServiceLocator
-        var factoryGO = new GameObject("BlockFactory");
-        var factory = factoryGO.AddComponent<BlockFactory>();
-        typeof(BlockFactory)
-            .GetField("_blockPrefab", BindingFlags.NonPublic | BindingFlags.Instance)
-            .SetValue(factory, blockPrefab);
-        SimpleServiceLocator.Register<IBlockFactory>(factory);
-
         // Create a new GameObject and add BlockSpawner component
         blockSpawnerObject = new GameObject("BlockSpawner");
         blockSpawner = blockSpawnerObject.AddComponent<BlockSpawner>();

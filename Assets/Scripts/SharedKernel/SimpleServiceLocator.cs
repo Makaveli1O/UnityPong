@@ -10,5 +10,6 @@ namespace Assets.Scripts.SharedKernel
         public static void Register<T>(T service) where T : class => _services[typeof(T)] = service;
 
         public static T Resolve<T>() where T : class => _services[typeof(T)] as T;
+        public static void Clear() => _services.Clear();
     }
 }

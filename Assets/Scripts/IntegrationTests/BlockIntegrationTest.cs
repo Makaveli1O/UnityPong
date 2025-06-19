@@ -1,0 +1,172 @@
+using System.Collections;
+using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.TestTools;
+using Assets.Scripts.Blocks;
+using Unity.Mathematics;
+using System.Reflection;
+
+public class BlockIntegrationTest
+{
+    private GameObject blockSpawnerObject;
+    private BlockSpawner blockSpawner;
+    [SerializeField] public GameObject blockPrefab;
+
+    [SetUp]
+    public void SetUp()
+    {
+        var blockPrefab = Resources.Load<GameObject>("Prefabs/Blocks/Block");
+        Assert.IsNotNull(blockPrefab, "Block prefab not found in Resources/Prefabs/Blocks/Block");
+
+        // Create a new GameObject and add BlockSpawner component
+        blockSpawnerObject = new GameObject("BlockSpawner");
+        blockSpawner = blockSpawnerObject.AddComponent<BlockSpawner>();
+
+        // Set the private block prefab in the BlockSpawner
+        typeof(BlockSpawner).GetField("_blockPrefab", BindingFlags.NonPublic | BindingFlags.Instance)
+            .SetValue(blockSpawner, blockPrefab);
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        Object.Destroy(blockSpawnerObject);
+    }
+
+    [UnityTest]
+    public IEnumerator SpawnEmptyBlock_ShouldPass()
+    {
+        blockSpawner.SpawnBlock(
+            new BlockData(
+                null,
+                null,
+                null,
+                null,
+                new int2(0, 0)
+            )
+        );
+        yield return null; // Wait for Start/Awake
+
+        var spawnedBlocks = GameObject.FindGameObjectsWithTag("Block");
+        Assert.IsTrue(spawnedBlocks.Length > 0, "No blocks were spawned on start.");
+    }
+
+    [UnityTest]
+    public IEnumerator SpawnAndDestroyEmptyBlock_ShouldPass()
+    {
+        // Spawn a block
+        var block = blockSpawner.SpawnBlock(
+            new BlockData(
+                null,
+                null,
+                null,
+                null,
+                new int2(0, 0)
+            )
+        );
+        yield return null; // Wait a frame for Start/Awake
+
+        Assert.IsNotNull(block, "Block was not spawned successfully.");
+
+        // Destroy the block
+        blockSpawner.DestroyBlock(block);
+        yield return null; // Wait a frame for destruction
+
+        var remainingBlocks = GameObject.FindGameObjectsWithTag("Block");
+        Assert.IsTrue(remainingBlocks.Length == 0, "Block was not destroyed successfully.");
+    }
+
+    [UnityTest]
+    public IEnumerator BlockSpawner_RemovesBlocks_WhenDestroyed()
+    {
+        yield return null; // Wait for blocks to spawn
+
+        var spawnedBlocks = GameObject.FindGameObjectsWithTag("Block");
+        foreach (var block in spawnedBlocks)
+        {
+            Object.Destroy(block);
+        }
+        yield return null;
+
+        var remainingBlocks = GameObject.FindGameObjectsWithTag("Block");
+        Assert.IsTrue(remainingBlocks.Length == 0, "Blocks were not removed after destruction.");
+    }
+    
+    [UnityTest]
+    public IEnumerator SpawnMultipleBlocks_ShouldSpawnCorrectNumber()
+    {
+        int spawnCount = 5;
+        for (int i = 0; i < spawnCount; i++)
+        {
+            blockSpawner.SpawnBlock(
+                new BlockData(
+                    null,
+                    null,
+                    null,
+                    null,
+                    new int2(i, 0)
+                )
+            );
+        }
+        yield return null;
+
+        var spawnedBlocks = GameObject.FindGameObjectsWithTag("Block");
+        Assert.AreEqual(spawnCount, spawnedBlocks.Length, $"Expected {spawnCount} blocks to be spawned.");
+    }
+
+    [UnityTest]
+    public IEnumerator DestroyBlock_NullReference_ShouldThrow()
+    {
+        Assert.Throws<System.Exception>(() => blockSpawner.DestroyBlock(null));
+        yield return null;
+    }
+
+    [UnityTest]
+    public IEnumerator SpawnBlock_WithCustomPosition_SetsCorrectTransform()
+    {
+        var position = new int2(3, 7);
+        var block = blockSpawner.SpawnBlock(
+            new BlockData(
+                null,
+                null,
+                null,
+                null,
+                position
+            )
+        );
+        yield return null;
+
+        Assert.IsNotNull(block, "Block was not spawned.");
+        Assert.AreEqual(position.x, Mathf.RoundToInt(block.transform.position.x), "Block X position mismatch.");
+        Assert.AreEqual(position.y, Mathf.RoundToInt(block.transform.position.y), "Block Y position mismatch.");
+    }
+
+    [UnityTest]
+    public IEnumerator DestroyAllBlocks_RemovesAllBlocks()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            blockSpawner.SpawnBlock(
+                new BlockData(
+                    null,
+                    null,
+                    null,
+                    null,
+                    new int2(i, 0)
+                )
+            );
+        }
+        yield return null;
+
+        var spawnedBlocks = GameObject.FindGameObjectsWithTag("Block");
+        foreach (var blockObj in spawnedBlocks)
+        {
+            Block block = blockObj.GetComponent <Block>();
+            blockSpawner.DestroyBlock(block);
+        }
+        yield return null;
+
+        var remainingBlocks = GameObject.FindGameObjectsWithTag("Block");
+        Assert.AreEqual(0, remainingBlocks.Length, "Not all blocks were destroyed.");
+    }
+}

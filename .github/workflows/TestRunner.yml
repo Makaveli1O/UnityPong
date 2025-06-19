@@ -13,7 +13,7 @@ jobs:
           - test-project
         testMode:
           - playmode
-          - editmode
+          # - editmode # currentl there are no editmode tests
           # - standalone
     steps:
       - uses: actions/checkout@v4

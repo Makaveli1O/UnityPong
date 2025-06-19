@@ -20,7 +20,7 @@ jobs:
       - name: Install Unity dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgtk-3-0 libnss3 libxss1 libgconf-2-4 libasound2 xvfb
+          sudo apt-get install -y libgtk-3-0 libnss3 libxss1 libglib2.0-0 libpulse0 xvfb
 
       # 2. Clean up the Library folder to prevent cache corruption
       - name: Clean Library folder

@@ -1,6 +1,7 @@
 using System.Collections;
 using Assets.Scripts.Blocks;
 using Assets.Scripts.SharedKernel;
+using System.Reflection;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -28,14 +29,26 @@ public class GlobalTestSetup
         var blockPrefab = Resources.Load<GameObject>("Prefabs/Blocks/Block");
         Assert.IsNotNull(blockPrefab, "Global Setup: Block prefab not found.");
 
+        //load behaviour resolver
+        var behaviourResolver = new HardcodedResolver();
+        Assert.IsNotNull(behaviourResolver, "Global Setup: Behaviour resolver not found.");
+
+        // TODO tests fail becaise of behaviour resolver not present in dictionary
+        SimpleServiceLocator.Register<IBlockBehaviourResolver>(behaviourResolver);
+
         // Create factory
         var factoryGO = new GameObject("BlockFactory");
         var factory = factoryGO.AddComponent<BlockFactory>();
         typeof(BlockFactory)
-            .GetField("_blockPrefab", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+            .GetField("_blockPrefab", BindingFlags.NonPublic | BindingFlags.Instance)
             .SetValue(factory, blockPrefab);
+        typeof(BlockFactory)
+            .GetField("_resolver", BindingFlags.NonPublic | BindingFlags.Instance)
+            .SetValue(factory, behaviourResolver);
 
-        // Register factory in ServiceLocator
+        // Register Factory in ServiceLocator
+
         SimpleServiceLocator.Register<IBlockFactory>(factory);
+        
     }
 }

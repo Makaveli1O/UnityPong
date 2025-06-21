@@ -5,19 +5,9 @@ namespace Assets.Scripts.Blocks
 {
     public class Block : MonoBehaviour
     {
-        public BlockData Data { get; private set; }
-
-        private List<IBlockBehaviour> _behaviours;
-
-        public void Initialize(BlockData data, List<IBlockBehaviour> behaviours)
-        {
-            Data = data;
-            _behaviours = behaviours;
-        }
-
         public void ExecuteBehaviours()
         {
-            foreach (var behaviour in _behaviours)
+            foreach (var behaviour in GetComponents<IBlockBehaviour>())
             {
                 behaviour.Execute(this);
             }

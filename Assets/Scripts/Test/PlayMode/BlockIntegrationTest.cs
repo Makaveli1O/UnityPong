@@ -122,12 +122,78 @@ public class BlockIntegrationTest
         var remainingBlocks = GameObject.FindGameObjectsWithTag("Block");
         Assert.AreEqual(0, remainingBlocks.Length, "Not all blocks were destroyed.");
     }
-    
+
+    [UnityTest]
+    public IEnumerator SpawnRedBlock_ShouldExplode()
+    {
+        var block = blockSpawner.SpawnBlock(
+            new BlockData(
+                null,
+                BlockColour.Red,
+                new int2(0, 0)
+            )
+        );
+        yield return null; // Wait for Start/Awake
+
+        Assert.IsNotNull(block, "Block was not spawned successfully.");
+
+        // Move the block to a new position
+        block.ExecuteBehaviours();
+
+        //TODO check explosion after it is implemented
+        
+        yield return null; // Wait a frame for the movement
+    }
+
+        [UnityTest]
+    public IEnumerator SpawnBlueBlock_ShouldMove()
+    {
+        var block = blockSpawner.SpawnBlock(
+            new BlockData(
+                null,
+                BlockColour.Blue,
+                new int2(0, 0)
+            )
+        );
+        yield return null; // Wait for Start/Awake
+
+        Assert.IsNotNull(block, "Block was not spawned successfully.");
+
+        // Move the block to a new position
+        block.ExecuteBehaviours();
+
+        //TODO check movement after it is implemented
+        
+        yield return null; // Wait a frame for the movement
+    }
+
+        [UnityTest]
+    public IEnumerator SpawnPurpleBlock_ShouldMoveAndExplode()
+    {
+        var block = blockSpawner.SpawnBlock(
+            new BlockData(
+                null,
+                BlockColour.Purple,
+                new int2(0, 0)
+            )
+        );
+        yield return null; // Wait for Start/Awake
+
+        Assert.IsNotNull(block, "Block was not spawned successfully.");
+
+        // Move the block to a new position
+        block.ExecuteBehaviours();
+
+        //TODO check movement after it is implemented
+        
+        yield return null; // Wait a frame for the movement
+    }
+
+
     private Block SpawnEmptyBlock(int2 position)
     {
         return blockSpawner.SpawnBlock(
             new BlockData(
-                null,
                 null,
                 BlockColour.Empty,
                 position

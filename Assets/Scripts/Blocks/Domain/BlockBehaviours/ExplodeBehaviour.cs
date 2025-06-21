@@ -6,6 +6,7 @@ public class ExplodeBehaviour : MonoBehaviour, IBlockBehaviour
 {
     public void Execute(Block context)
     {
-        Debug.Log("Execuing ExplodeBehaviour");
+        // TODO : Implement the logic for exploding the block.
+        Debug.Log("Executing ExplodeBehaviour on block.");
     }
 }

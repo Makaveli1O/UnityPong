@@ -32,7 +32,7 @@ public class GlobalTestSetup
         var behaviourResolver = new BlockColourBehaviourResolver();
         Assert.IsNotNull(behaviourResolver, "Global Setup: Behaviour resolver not found.");
 
-        // TODO tests fail becaise of behaviour resolver not present in dictionary
+        // Since it is a dependency for the factory, we register it first
         SimpleServiceLocator.Register<IBlockBehaviourResolver>(behaviourResolver);
 
         // Create factory
@@ -46,7 +46,6 @@ public class GlobalTestSetup
             .SetValue(factory, behaviourResolver);
 
         // Register Factory in ServiceLocator
-
         SimpleServiceLocator.Register<IBlockFactory>(factory);
         
     }

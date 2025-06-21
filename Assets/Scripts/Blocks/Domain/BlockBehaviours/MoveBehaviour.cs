@@ -6,6 +6,7 @@ public class MoveBehaviour : MonoBehaviour, IBlockBehaviour
 {
     public void Execute(Block context)
     {
-        Debug.Log("Execuing MoveBehaviour");
+        // TODO: Implement the logic for moving the block.
+        Debug.Log("Executing MoveBehaviour on block.");
     }
 }

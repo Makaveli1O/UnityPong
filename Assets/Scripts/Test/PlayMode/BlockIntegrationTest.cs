@@ -4,8 +4,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using Assets.Scripts.Blocks;
 using Unity.Mathematics;
-using System.Reflection;
-using Assets.Scripts.SharedKernel;
+using Assets.Scripts.Blocks.Domain;
 
 public class BlockIntegrationTest
 {
@@ -30,15 +29,7 @@ public class BlockIntegrationTest
     [UnityTest]
     public IEnumerator SpawnEmptyBlock_ShouldPass()
     {
-        blockSpawner.SpawnBlock(
-            new BlockData(
-                null,
-                null,
-                null,
-                null,
-                new int2(0, 0)
-            )
-        );
+        SpawnEmptyBlock(new int2(0, 0));
         yield return null; // Wait for Start/Awake
 
         var spawnedBlocks = GameObject.FindGameObjectsWithTag("Block");
@@ -49,15 +40,7 @@ public class BlockIntegrationTest
     public IEnumerator SpawnAndDestroyEmptyBlock_ShouldPass()
     {
         // Spawn a block
-        var block = blockSpawner.SpawnBlock(
-            new BlockData(
-                null,
-                null,
-                null,
-                null,
-                new int2(0, 0)
-            )
-        );
+        var block = SpawnEmptyBlock(new int2(0, 0));
         yield return null; // Wait a frame for Start/Awake
 
         Assert.IsNotNull(block, "Block was not spawned successfully.");
@@ -85,22 +68,14 @@ public class BlockIntegrationTest
         var remainingBlocks = GameObject.FindGameObjectsWithTag("Block");
         Assert.IsTrue(remainingBlocks.Length == 0, "Blocks were not removed after destruction.");
     }
-    
+
     [UnityTest]
     public IEnumerator SpawnMultipleBlocks_ShouldSpawnCorrectNumber()
     {
         int spawnCount = 5;
         for (int i = 0; i < spawnCount; i++)
         {
-            blockSpawner.SpawnBlock(
-                new BlockData(
-                    null,
-                    null,
-                    null,
-                    null,
-                    new int2(i, 0)
-                )
-            );
+            SpawnEmptyBlock(new int2(i, 0));
         }
         yield return null;
 
@@ -119,15 +94,7 @@ public class BlockIntegrationTest
     public IEnumerator SpawnBlock_WithCustomPosition_SetsCorrectTransform()
     {
         var position = new int2(3, 7);
-        var block = blockSpawner.SpawnBlock(
-            new BlockData(
-                null,
-                null,
-                null,
-                null,
-                position
-            )
-        );
+        var block = SpawnEmptyBlock(position);
         yield return null;
 
         Assert.IsNotNull(block, "Block was not spawned.");
@@ -140,27 +107,97 @@ public class BlockIntegrationTest
     {
         for (int i = 0; i < 3; i++)
         {
-            blockSpawner.SpawnBlock(
-                new BlockData(
-                    null,
-                    null,
-                    null,
-                    null,
-                    new int2(i, 0)
-                )
-            );
+            SpawnEmptyBlock(new int2(i, 0));
         }
         yield return null;
 
         var spawnedBlocks = GameObject.FindGameObjectsWithTag("Block");
         foreach (var blockObj in spawnedBlocks)
         {
-            Block block = blockObj.GetComponent <Block>();
+            Block block = blockObj.GetComponent<Block>();
             blockSpawner.DestroyBlock(block);
         }
         yield return null;
 
         var remainingBlocks = GameObject.FindGameObjectsWithTag("Block");
         Assert.AreEqual(0, remainingBlocks.Length, "Not all blocks were destroyed.");
+    }
+
+    [UnityTest]
+    public IEnumerator SpawnRedBlock_ShouldExplode()
+    {
+        var block = blockSpawner.SpawnBlock(
+            new BlockData(
+                null,
+                BlockColour.Red,
+                new int2(0, 0)
+            )
+        );
+        yield return null; // Wait for Start/Awake
+
+        Assert.IsNotNull(block, "Block was not spawned successfully.");
+
+        // Move the block to a new position
+        block.ExecuteBehaviours();
+
+        //TODO check explosion after it is implemented
+        
+        yield return null; // Wait a frame for the movement
+    }
+
+        [UnityTest]
+    public IEnumerator SpawnBlueBlock_ShouldMove()
+    {
+        var block = blockSpawner.SpawnBlock(
+            new BlockData(
+                null,
+                BlockColour.Blue,
+                new int2(0, 0)
+            )
+        );
+        yield return null; // Wait for Start/Awake
+
+        Assert.IsNotNull(block, "Block was not spawned successfully.");
+
+        // Move the block to a new position
+        block.ExecuteBehaviours();
+
+        //TODO check movement after it is implemented
+        
+        yield return null; // Wait a frame for the movement
+    }
+
+        [UnityTest]
+    public IEnumerator SpawnPurpleBlock_ShouldMoveAndExplode()
+    {
+        var block = blockSpawner.SpawnBlock(
+            new BlockData(
+                null,
+                BlockColour.Purple,
+                new int2(0, 0)
+            )
+        );
+        yield return null; // Wait for Start/Awake
+
+        Assert.IsNotNull(block, "Block was not spawned successfully.");
+
+        // Move the block to a new position
+        block.ExecuteBehaviours();
+
+        //TODO check movement after it is implemented
+        
+        yield return null; // Wait a frame for the movement
+    }
+
+
+    private Block SpawnEmptyBlock(int2 position)
+    {
+        return blockSpawner.SpawnBlock(
+            new BlockData(
+                null,
+                BlockColour.Empty,
+                position
+            )
+        );
     }
 }

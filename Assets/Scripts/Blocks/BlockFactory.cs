@@ -1,11 +1,24 @@
 using System;
+using System.Collections.Generic;
 using Assets.Scripts.Blocks;
+using Assets.Scripts.Blocks.Domain;
 using Assets.Scripts.SharedKernel;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class BlockFactory : MonoBehaviour, IBlockFactory
 {
     [SerializeField] private GameObject _blockPrefab;
+    [SerializeField] private IBlockBehaviourResolver _resolver;
+    private List<Block> _spawnedBlocks = new();
+
+    /// <summary>
+    /// Awake is called when the script instance is being loaded.
+    /// </summary>
+    void Awake()
+    {
+        _resolver = SimpleServiceLocator.Resolve<IBlockBehaviourResolver>();
+    }
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -15,15 +28,51 @@ public class BlockFactory : MonoBehaviour, IBlockFactory
     {
         if (_blockPrefab == null)
         {
-            // Throw exception if block prefab is not assigned
-            throw new Exception("Block prefab is not assigned in the BlockSpawner.");
+            throw new Exception("Block prefab is not assigned in the inspector.");
+        }
+
+        if (_resolver == null)
+        {
+            throw new Exception("BlockFactory not initialized with behaviour resolver.");
         }
     }
+
     public Block SpawnBlock(BlockData blockData, Transform parent)
     {
         if (_blockPrefab == null) throw new Exception("Block prefab is not assigned.");
-        Vector2 pos = PositionConvertor2D.ToVector2(blockData.Position);
-        GameObject go = Instantiate(_blockPrefab, pos, Quaternion.identity, parent);
+        if (_resolver == null) throw new Exception("BlockFactory not initialized with behaviour resolver.");
+
+        GameObject go = InstantiateBlockGameObjectOnPosition(blockData.Position, parent);
+
+        // Get colour behaviours
+        var colourBehaviours = _resolver.Resolve(blockData.Colour);
+
+        foreach (var type in colourBehaviours) go.AddComponent(type);
+
         return go.GetComponent<Block>();
+    }
+
+    private GameObject InstantiateBlockGameObjectOnPosition(int2 position, Transform parent)
+    {
+        Vector2 pos = PositionConvertor2D.ToVector2(position);
+        GameObject go = Instantiate(_blockPrefab, pos, Quaternion.identity, parent);
+
+        Block block = go.GetComponent<Block>();
+
+        if (block != null) _spawnedBlocks.Add(block);
+
+        if (block == null) throw new Exception("Block component not found on the prefab.");
+
+        return go;
+    }
+
+    private void AttachBehavioursToBlockGameObject(GameObject go, Block block, BlockColour blockColour)
+    {
+        var behaviourTypes = _resolver.Resolve(blockColour);
+
+        foreach (var type in behaviourTypes)
+        {
+            go.AddComponent(type);
+        }
     }
 }

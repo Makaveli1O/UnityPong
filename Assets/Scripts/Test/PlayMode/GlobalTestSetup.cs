@@ -1,9 +1,8 @@
-using System.Collections;
-using Assets.Scripts.Blocks;
 using Assets.Scripts.SharedKernel;
-using System.Reflection;
 using NUnit.Framework;
 using UnityEngine;
+using Assets.Scripts.Blocks;
+using System.Reflection;
 
 [SetUpFixture]
 public class GlobalTestSetup
@@ -30,7 +29,7 @@ public class GlobalTestSetup
         Assert.IsNotNull(blockPrefab, "Global Setup: Block prefab not found.");
 
         //load behaviour resolver
-        var behaviourResolver = new HardcodedResolver();
+        var behaviourResolver = new BlockColourBehaviourResolver();
         Assert.IsNotNull(behaviourResolver, "Global Setup: Behaviour resolver not found.");
 
         // TODO tests fail becaise of behaviour resolver not present in dictionary

@@ -17,7 +17,7 @@ public class GameBootstrapper : MonoBehaviour
     private void RegisterServices()
     {
         SimpleServiceLocator.Register<IBlockFactory>(_blockFactory);
-        SimpleServiceLocator.Register<IBlockBehaviourResolver>(new BlockColourBehaviourResolver());
+        SimpleServiceLocator.Register<IBlockBehaviourResolver>(_blockBehaviourResolver);
         // Register other services here
     }
 }

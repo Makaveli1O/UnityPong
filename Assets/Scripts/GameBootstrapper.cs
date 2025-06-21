@@ -10,14 +10,14 @@ public class GameBootstrapper : MonoBehaviour
     void Awake()
     {
         _blockFactory = GetComponent<BlockFactory>();
-        _blockBehaviourResolver = new HardcodedResolver(); //TODO maybe make "HARDCODED" more flxible
+        _blockBehaviourResolver = new BlockColourBehaviourResolver(); //TODO maybe make "HARDCODED" more flxible
         RegisterServices();
     }
 
     private void RegisterServices()
     {
         SimpleServiceLocator.Register<IBlockFactory>(_blockFactory);
-        SimpleServiceLocator.Register<IBlockBehaviourResolver>(new HardcodedResolver());
+        SimpleServiceLocator.Register<IBlockBehaviourResolver>(new BlockColourBehaviourResolver());
         // Register other services here
     }
 }

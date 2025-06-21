@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Assets.Scripts.Blocks.Domain;
 
-public class HardcodedResolver : IBlockBehaviourResolver
+public class BlockColourBehaviourResolver : IBlockBehaviourResolver
 {
     public List<Type> Resolve(BlockColour color)
     {

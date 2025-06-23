@@ -5,6 +5,7 @@ using UnityEngine.TestTools;
 using Assets.Scripts.Blocks;
 using Unity.Mathematics;
 using Assets.Scripts.Blocks.Domain;
+using Assets.Scripts.SharedKernel;
 
 public class BlockIntegrationTest
 {
@@ -124,7 +125,33 @@ public class BlockIntegrationTest
     }
 
     [UnityTest]
-    public IEnumerator SpawnRedBlock_ShouldExplode()
+    public IEnumerator SpawnedBlockColours_ShouldBeRenderedCorrcetly()
+    {
+        int colourCount = BlockColour.GetValues(typeof(BlockColour)).Length;
+
+        for (int i = 0; i < colourCount; i++)
+        {
+            Block block = blockSpawner.SpawnBlock(
+                new BlockData(
+                    null,
+                    (BlockColour)i,
+                    new int2(i, 0)
+                )
+            );
+
+            var spriteRenderer = block.GetComponent<SpriteRenderer>();
+            Assert.AreEqual(
+                BlockColourBehaviourResolver.ToColour((BlockColour)i),
+                spriteRenderer.color,
+                "Block sprite color does not match BlockColour."
+            );
+        }
+
+        yield return null;
+    }
+
+    [UnityTest]
+    public IEnumerator SpawnRedBlockBehaviour_ShouldExplode()
     {
         var block = blockSpawner.SpawnBlock(
             new BlockData(
@@ -146,7 +173,7 @@ public class BlockIntegrationTest
     }
 
     [UnityTest]
-    public IEnumerator SpawnBlueBlock_ShouldMove()
+    public IEnumerator SpawnBlueBlockBehaviour_ShouldMove()
     {
         var block = blockSpawner.SpawnBlock(
             new BlockData(
@@ -168,7 +195,7 @@ public class BlockIntegrationTest
     }
 
         [UnityTest]
-    public IEnumerator SpawnPurpleBlock_ShouldMoveAndExplode()
+    public IEnumerator SpawnPurpleBlockBehaviour_ShouldMoveAndExplode()
     {
         var block = blockSpawner.SpawnBlock(
             new BlockData(

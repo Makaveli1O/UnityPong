@@ -11,7 +11,6 @@ public class GlobalTestSetup
     [OneTimeSetUp]
     public void RegisterGlobalServices()
     {
-        Debug.Log("Global Setup: Registering services for integration tests...");
         // Register in ServiceLocator
         SimpleServiceLocator.Clear();
         SetupServiceLocator_BlockFactory();

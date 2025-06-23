@@ -49,7 +49,11 @@ public class BlockFactory : MonoBehaviour, IBlockFactory
 
         foreach (var type in colourBehaviours) go.AddComponent(type);
 
-        return go.GetComponent<Block>();
+        Block block = go.GetComponent<Block>();
+
+        block.Initialize(blockData);
+
+        return block;
     }
 
     private GameObject InstantiateBlockGameObjectOnPosition(int2 position, Transform parent)
@@ -64,15 +68,5 @@ public class BlockFactory : MonoBehaviour, IBlockFactory
         if (block == null) throw new Exception("Block component not found on the prefab.");
 
         return go;
-    }
-
-    private void AttachBehavioursToBlockGameObject(GameObject go, Block block, BlockColour blockColour)
-    {
-        var behaviourTypes = _resolver.Resolve(blockColour);
-
-        foreach (var type in behaviourTypes)
-        {
-            go.AddComponent(type);
-        }
     }
 }

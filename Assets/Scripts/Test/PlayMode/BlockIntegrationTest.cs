@@ -145,7 +145,7 @@ public class BlockIntegrationTest
         yield return null; // Wait a frame for the movement
     }
 
-        [UnityTest]
+    [UnityTest]
     public IEnumerator SpawnBlueBlock_ShouldMove()
     {
         var block = blockSpawner.SpawnBlock(

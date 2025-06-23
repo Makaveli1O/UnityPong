@@ -3,6 +3,7 @@ using NUnit.Framework;
 using UnityEngine;
 using Assets.Scripts.Blocks;
 using System.Reflection;
+using UnityEngine.SceneManagement;
 
 [SetUpFixture]
 public class GlobalTestSetup

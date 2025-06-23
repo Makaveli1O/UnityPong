@@ -5,6 +5,7 @@ using Assets.Scripts.Blocks.Domain;
 using Assets.Scripts.SharedKernel;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Diagnostics;
 
 public class BlockFactory : MonoBehaviour, IBlockFactory
 {
@@ -61,7 +62,7 @@ public class BlockFactory : MonoBehaviour, IBlockFactory
 
     private GameObject InstantiateBlockGameObjectOnPosition(int2 position, Transform parent)
     {
-        Vector2 pos = PositionConvertor2D.ToVector2(position);
+        Vector2 pos = Utils2D.PositionConvertor2D.ToVector2(position);
         GameObject go = Instantiate(_blockPrefab, pos, Quaternion.identity, parent);
 
         Block block = go.GetComponent<Block>();

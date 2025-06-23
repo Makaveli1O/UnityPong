@@ -9,11 +9,21 @@ namespace Assets.Scripts.Blocks
     {
         private BlockData _blockData;
         private SpriteRenderer _spriteRenderer;
-        private List<IBlockBehaviour> _behaviours;
+        // Behaviour triggers
+        private List<IUpdateBehaviour> _updateBehaviours;
+        private List<ICollisionBehaviour> _collisionBehaviours;
 
-        public void ExecuteBehaviours()
+        public void ExecuteUpdateBehaviours()
         {
-            foreach (var behaviour in _behaviours)
+            foreach (var behaviour in _updateBehaviours)
+            {
+                behaviour.Execute(this);
+            }
+        }
+
+        public void ExecuteCollisionBehaviours()
+        {
+            foreach (var behaviour in _collisionBehaviours)
             {
                 behaviour.Execute(this);
             }
@@ -28,14 +38,21 @@ namespace Assets.Scripts.Blocks
             {
                 throw new System.Exception("SpriteRenderer component is missing on the Block GameObject.");
             }
+            
+            _updateBehaviours = GetComponents<IUpdateBehaviour>().ToList();
+            _collisionBehaviours = GetComponents<ICollisionBehaviour>().ToList();
 
-            _behaviours = GetComponents<IBlockBehaviour>().ToList();
             _spriteRenderer.color = BlockColourBehaviourResolver.ToColour(blockData.Colour);
+        }
+
+        private void Update()
+        {
+            ExecuteUpdateBehaviours();
         }
 
         private void OnCollisionExit2D()
         {
-            Destroy(gameObject);
+            ExecuteCollisionBehaviours();
         }
     }
 }

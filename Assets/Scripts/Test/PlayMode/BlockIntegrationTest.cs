@@ -8,9 +8,12 @@ using Assets.Scripts.Blocks.Domain;
 using Assets.Scripts.SharedKernel;
 using System.Reflection;
 using System.Linq;
+using System;
 
 public class BlockIntegrationTest
 {
+    private const string collisionBehavioursField = "_collisionBehaviours";
+    private const string updateBehavioursField = "_updateBehaviours";
     private GameObject blockSpawnerObject;
     private BlockSpawner blockSpawner;
     [SerializeField] public GameObject blockPrefab;
@@ -26,7 +29,7 @@ public class BlockIntegrationTest
     [TearDown]
     public void TearDown()
     {
-        Object.Destroy(blockSpawnerObject);
+        UnityEngine.Object.Destroy(blockSpawnerObject);
     }
 
     [UnityTest]
@@ -42,17 +45,18 @@ public class BlockIntegrationTest
     [UnityTest]
     public IEnumerator SpawnAndDestroyEmptyBlock_ShouldPass()
     {
+        var remainingBlocks = GameObject.FindGameObjectsWithTag("Block");
         // Spawn a block
         var block = SpawnEmptyBlock(new int2(0, 0));
         yield return null; // Wait a frame for Start/Awake
 
         Assert.IsNotNull(block, "Block was not spawned successfully.");
-
+ remainingBlocks = GameObject.FindGameObjectsWithTag("Block");
         // Destroy the block
         blockSpawner.DestroyBlock(block);
         yield return null; // Wait a frame for destruction
 
-        var remainingBlocks = GameObject.FindGameObjectsWithTag("Block");
+        remainingBlocks = GameObject.FindGameObjectsWithTag("Block");
         Assert.IsTrue(remainingBlocks.Length == 0, "Block was not destroyed successfully.");
     }
 
@@ -64,7 +68,7 @@ public class BlockIntegrationTest
         var spawnedBlocks = GameObject.FindGameObjectsWithTag("Block");
         foreach (var block in spawnedBlocks)
         {
-            Object.Destroy(block);
+            UnityEngine.Object.Destroy(block);
         }
         yield return null;
 
@@ -127,7 +131,7 @@ public class BlockIntegrationTest
     }
 
     [UnityTest]
-    public IEnumerator SpawnedBlockColours_ShouldBeRenderedCorrcetly()
+    public IEnumerator SpawnedBlockColours_ShouldBeRenderedCorrectly()
     {
         int colourCount = BlockColour.GetValues(typeof(BlockColour)).Length;
 
@@ -166,12 +170,12 @@ public class BlockIntegrationTest
 
         Assert.IsNotNull(block, "Block was not spawned successfully.");
 
-        // Check if the block has the ExplodeBehaviour
-        System.Type[] blockBehaviourTypes = GetBlockBehavioursTypes(block);
+        // Check if the block has the ExplodeBehaviour in collisionBehaviours
+        var collisionBehaviourType = GetBehaviourTypesFromField(block, collisionBehavioursField);
 
         CollectionAssert.AreEquivalent(
             new[] { typeof(ExplodeBehaviour) },
-            blockBehaviourTypes
+            collisionBehaviourType
         );
 
         yield return null; // Wait a frame for the movement
@@ -191,12 +195,12 @@ public class BlockIntegrationTest
 
         Assert.IsNotNull(block, "Block was not spawned successfully.");
 
-        System.Type[] blockBehaviourTypes = GetBlockBehavioursTypes(block);
+        // Check if the block has the Move in updateBehaviours
+        var updateBehaviourType = GetBehaviourTypesFromField(block, updateBehavioursField);
 
-        // Check if the block has the MoveBehaviour
         CollectionAssert.AreEquivalent(
             new[] { typeof(MoveBehaviour) },
-            blockBehaviourTypes
+            updateBehaviourType
         );
 
         yield return null; // Wait a frame for the movement
@@ -216,12 +220,20 @@ public class BlockIntegrationTest
 
         Assert.IsNotNull(block, "Block was not spawned successfully.");
 
-        // Check if the block has both ExplodeBehaviour and MoveBehaviour
-        System.Type[] blockBehaviourTypes = GetBlockBehavioursTypes(block);
+        // Check if the block has the Move in updateBehaviours
+        var updateBehaviourType = GetBehaviourTypesFromField(block, updateBehavioursField);
 
         CollectionAssert.AreEquivalent(
-            new[] { typeof(ExplodeBehaviour), typeof(MoveBehaviour) },
-            blockBehaviourTypes
+            new[] { typeof(MoveBehaviour) },
+            updateBehaviourType
+        );
+
+        // Check if the block has the ExplodeBehaviour in collisionBehaviours
+        var collisionBehaviourType = GetBehaviourTypesFromField(block, collisionBehavioursField);
+
+        CollectionAssert.AreEquivalent(
+            new[] { typeof(ExplodeBehaviour) },
+            collisionBehaviourType
         );
 
         yield return null; // Wait a frame for the movement
@@ -241,13 +253,26 @@ public class BlockIntegrationTest
 
 
     // Extracts the types of behaviours from the block instance for assertions
-    
+
     private System.Type[] GetBlockBehavioursTypes(Block block)
     {
-        var fieldInfo = typeof(Block).GetField("_behaviours", BindingFlags.NonPublic | BindingFlags.Instance);
-        System.Collections.IEnumerable behaviours = (System.Collections.IEnumerable)fieldInfo.GetValue(block);
-        System.Type[] actualTypes = behaviours.Cast<IBlockBehaviour>().Select(b => b.GetType()).ToArray();
+        var updateTypes = GetBehaviourTypesFromField(block, "_updateBehaviours");
+        var collisionTypes = GetBehaviourTypesFromField(block, "_collisionBehaviours");
 
-        return actualTypes;
+        // Combine and return
+        return updateTypes.Concat(collisionTypes).Distinct().ToArray();
+    }
+    
+    private System.Type[] GetBehaviourTypesFromField(Block block, string fieldName)
+    {
+        var bindingFlags = BindingFlags.NonPublic | BindingFlags.Instance;
+
+        var fieldInfo = typeof(Block).GetField(fieldName, bindingFlags);
+        if (fieldInfo == null) return Array.Empty<System.Type>();
+
+        var behaviours = fieldInfo.GetValue(block) as System.Collections.IEnumerable;
+        if (behaviours == null) return Array.Empty<System.Type>();
+
+        return behaviours.Cast<IBlockBehaviour>().Select(b => b.GetType()).ToArray();
     }
 }

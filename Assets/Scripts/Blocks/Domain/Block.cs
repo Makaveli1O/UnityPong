@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Blocks.Domain;
 using UnityEngine;
 
@@ -8,10 +9,11 @@ namespace Assets.Scripts.Blocks
     {
         private BlockData _blockData;
         private SpriteRenderer _spriteRenderer;
+        private List<IBlockBehaviour> _behaviours;
 
         public void ExecuteBehaviours()
         {
-            foreach (var behaviour in GetComponents<IBlockBehaviour>())
+            foreach (var behaviour in _behaviours)
             {
                 behaviour.Execute(this);
             }
@@ -27,6 +29,7 @@ namespace Assets.Scripts.Blocks
                 throw new System.Exception("SpriteRenderer component is missing on the Block GameObject.");
             }
 
+            _behaviours = GetComponents<IBlockBehaviour>().ToList();
             _spriteRenderer.color = BlockColourBehaviourResolver.ToColour(blockData.Colour);
         }
 

@@ -47,7 +47,10 @@ public class BlockFactory : MonoBehaviour, IBlockFactory
         // Get colour behaviours
         var colourBehaviours = _resolver.Resolve(blockData.Colour);
 
-        foreach (var type in colourBehaviours) go.AddComponent(type);
+        foreach (var behaviour in colourBehaviours)
+        {
+            go.AddComponent(behaviour);
+        } 
 
         Block block = go.GetComponent<Block>();
 

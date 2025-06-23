@@ -6,6 +6,8 @@ using Assets.Scripts.Blocks;
 using Unity.Mathematics;
 using Assets.Scripts.Blocks.Domain;
 using Assets.Scripts.SharedKernel;
+using System.Reflection;
+using System.Linq;
 
 public class BlockIntegrationTest
 {
@@ -151,7 +153,7 @@ public class BlockIntegrationTest
     }
 
     [UnityTest]
-    public IEnumerator SpawnRedBlockBehaviour_ShouldExplode()
+    public IEnumerator SpawnRedBlockBehaviour_ShouldHaveExplode()
     {
         var block = blockSpawner.SpawnBlock(
             new BlockData(
@@ -164,16 +166,19 @@ public class BlockIntegrationTest
 
         Assert.IsNotNull(block, "Block was not spawned successfully.");
 
-        // Move the block to a new position
-        block.ExecuteBehaviours();
+        // Check if the block has the ExplodeBehaviour
+        System.Type[] blockBehaviourTypes = GetBlockBehavioursTypes(block);
 
-        //TODO check explosion after it is implemented
-        
+        CollectionAssert.AreEquivalent(
+            new[] { typeof(ExplodeBehaviour) },
+            blockBehaviourTypes
+        );
+
         yield return null; // Wait a frame for the movement
     }
 
     [UnityTest]
-    public IEnumerator SpawnBlueBlockBehaviour_ShouldMove()
+    public IEnumerator SpawnBlueBlockBehaviour_ShouldHaveMove()
     {
         var block = blockSpawner.SpawnBlock(
             new BlockData(
@@ -186,16 +191,19 @@ public class BlockIntegrationTest
 
         Assert.IsNotNull(block, "Block was not spawned successfully.");
 
-        // Move the block to a new position
-        block.ExecuteBehaviours();
+        System.Type[] blockBehaviourTypes = GetBlockBehavioursTypes(block);
 
-        //TODO check movement after it is implemented
-        
+        // Check if the block has the MoveBehaviour
+        CollectionAssert.AreEquivalent(
+            new[] { typeof(MoveBehaviour) },
+            blockBehaviourTypes
+        );
+
         yield return null; // Wait a frame for the movement
     }
 
-        [UnityTest]
-    public IEnumerator SpawnPurpleBlockBehaviour_ShouldMoveAndExplode()
+    [UnityTest]
+    public IEnumerator SpawnPurpleBlockBehaviour_ShouldHaveMoveAndExplode()
     {
         var block = blockSpawner.SpawnBlock(
             new BlockData(
@@ -208,11 +216,14 @@ public class BlockIntegrationTest
 
         Assert.IsNotNull(block, "Block was not spawned successfully.");
 
-        // Move the block to a new position
-        block.ExecuteBehaviours();
+        // Check if the block has both ExplodeBehaviour and MoveBehaviour
+        System.Type[] blockBehaviourTypes = GetBlockBehavioursTypes(block);
 
-        //TODO check movement after it is implemented
-        
+        CollectionAssert.AreEquivalent(
+            new[] { typeof(ExplodeBehaviour), typeof(MoveBehaviour) },
+            blockBehaviourTypes
+        );
+
         yield return null; // Wait a frame for the movement
     }
 
@@ -226,5 +237,17 @@ public class BlockIntegrationTest
                 position
             )
         );
+    }
+
+
+    // Extracts the types of behaviours from the block instance for assertions
+    
+    private System.Type[] GetBlockBehavioursTypes(Block block)
+    {
+        var fieldInfo = typeof(Block).GetField("_behaviours", BindingFlags.NonPublic | BindingFlags.Instance);
+        System.Collections.IEnumerable behaviours = (System.Collections.IEnumerable)fieldInfo.GetValue(block);
+        System.Type[] actualTypes = behaviours.Cast<IBlockBehaviour>().Select(b => b.GetType()).ToArray();
+
+        return actualTypes;
     }
 }

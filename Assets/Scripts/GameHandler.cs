@@ -14,7 +14,7 @@ namespace Game
 
         private void Awake()
         {
-            _winCondition = new BlockWinCondition();
+            _winCondition = new BlockWinConditionCounter();
         }
 
         private void Start()

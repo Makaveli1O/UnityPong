@@ -7,8 +7,7 @@ public class GameOver : MonoBehaviour
 {
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Load the Game Over scene
-        var sceneLoader = SimpleServiceLocator.Resolve<SceneLoader>();
-        sceneLoader.LoadScene("GameOver");
+        // TODO remove this is not ccorrect responsiblity
+        SceneManager.LoadScene("GameOver");
     }
 }

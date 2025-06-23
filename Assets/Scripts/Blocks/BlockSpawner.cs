@@ -3,6 +3,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using Assets.Scripts.SharedKernel;
 using Assets.Scripts.Blocks.Domain;
+using Mono.Cecil;
 
 namespace Assets.Scripts.Blocks
 {
@@ -10,6 +11,7 @@ namespace Assets.Scripts.Blocks
     {
         [SerializeField] private int _maxBlocks = 10;
         private int _currentBlockCount = 0;
+        private IBlockCounter _blockCounter;
         private IBlockFactory _blockFactory;
 
         void Awake()

@@ -1,9 +1,15 @@
-using UnityEngine;
-
-public class BlockWinCondition : IGameWinCondition
+public class BlockWinCondition : IGameWinCondition, IBlockCounter
 {
-    public bool IsWinConditionMet()
+    private int _activeBlockCount;
+    public bool IsWinConditionMet() => _activeBlockCount == 0;
+
+    public void OnBlockSpawned()
     {
-        return GameObject.FindGameObjectsWithTag("Block").Length == 0;
+        _activeBlockCount++;
+    }
+
+    public void OnBlockDestroyed()
+    {
+        _activeBlockCount--;
     }
 }

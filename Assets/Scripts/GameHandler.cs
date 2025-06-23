@@ -3,19 +3,18 @@ using UnityEngine;
 
 namespace Game
 {
+    //TODO use event system instead of checking in update whethe ror not win condition is met
     public class GameHandler : MonoBehaviour
     {
         [SerializeField] private string _winScene = "WinScene";
         [SerializeField] private string _gameOverScene = "GameOverScene";
 
         private IGameWinCondition _winCondition;
-        private SceneLoader _sceneLoader;
         private GameState _currentState;
 
         private void Awake()
         {
-            _winCondition = SimpleServiceLocator.Resolve<IGameWinCondition>();
-            _sceneLoader = SimpleServiceLocator.Resolve<SceneLoader>();
+            _winCondition = new BlockWinCondition();
         }
 
         private void Start()
@@ -52,11 +51,11 @@ namespace Game
                     break;
                 case GameState.GameOver:
                     Time.timeScale = 0f;
-                    _sceneLoader.LoadScene(_gameOverScene);
+                    SceneLoader.LoadScene(_gameOverScene);
                     break;
                 case GameState.Win:
                     Time.timeScale = 0f;
-                    _sceneLoader.LoadScene(_winScene);
+                    SceneLoader.LoadScene(_winScene);
                     break;
             }
         }

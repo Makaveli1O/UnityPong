@@ -2,6 +2,7 @@ using NUnit.Framework.Internal;
 using Unity.Mathematics;
 using UnityEngine;
 using Assets.Scripts.SharedKernel;
+using Assets.Scripts.Blocks.Domain;
 
 namespace Assets.Scripts.Blocks
 {

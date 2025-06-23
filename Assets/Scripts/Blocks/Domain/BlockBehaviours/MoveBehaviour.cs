@@ -8,7 +8,6 @@ public class MoveBehaviour : MonoBehaviour, IUpdateBehaviour
     public Vector3 pointB;
     public float speed = 1.0f;
     private Vector3 pointA;
-    private float distance = 0f;
     private float time = 0f;
     [SerializeField] private const float minMoveRange = 1f;
     [SerializeField] private const float maxMoveRange = 3f;

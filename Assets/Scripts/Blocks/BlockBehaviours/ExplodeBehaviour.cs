@@ -1,11 +1,13 @@
 
 using Assets.Scripts.Blocks;
 using UnityEngine;
-
-public class ExplodeBehaviour : MonoBehaviour, ICollisionBehaviour
+namespace Assets.Scripts.Blocks
 {
-    public void Execute(Block context)
+    public class ExplodeBehaviour : MonoBehaviour, ICollisionBehaviour
     {
-        Debug.Log("Executing ExplodeBehaviour on block.");
+        public void Execute(Block context)
+        {
+            Debug.Log("Executing ExplodeBehaviour on block.");
+        }
     }
 }

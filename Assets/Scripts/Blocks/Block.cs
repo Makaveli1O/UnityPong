@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Blocks.Domain;
 using UnityEngine;
 
 namespace Assets.Scripts.Blocks

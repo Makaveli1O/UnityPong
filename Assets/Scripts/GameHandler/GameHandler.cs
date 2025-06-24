@@ -1,9 +1,8 @@
-using Assets.Scripts.SharedKernel;
+using Assets.Scripts.Blocks;
 using UnityEngine;
 
 namespace Game
 {
-    //TODO use event system instead of checking in update whethe ror not win condition is met
     public class GameHandler : MonoBehaviour
     {
         [SerializeField] private string _winScene = "WinScene";

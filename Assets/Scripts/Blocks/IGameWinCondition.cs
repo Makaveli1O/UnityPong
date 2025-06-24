@@ -1,4 +1,7 @@
-public interface IGameWinCondition
+namespace Assets.Scripts.Blocks
 {
-    public bool IsWinConditionMet();
+    public interface IGameWinCondition
+    {
+        public bool IsWinConditionMet();
+    }
 }

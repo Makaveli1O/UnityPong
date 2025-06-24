@@ -1,5 +1,8 @@
-public interface IBlockCounter
+namespace Assets.Scripts.Blocks
 {
-    void OnBlockSpawned();
-    void OnBlockDestroyed();
+    public interface IBlockCounter
+    {
+        void OnBlockSpawned();
+        void OnBlockDestroyed();
+    }
 }

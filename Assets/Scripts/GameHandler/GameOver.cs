@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace GameHandler{
+namespace Assets.Scripts.GameHandler{
     public class GameOver : MonoBehaviour
     {
         private const string _sceneName = "GameOver";

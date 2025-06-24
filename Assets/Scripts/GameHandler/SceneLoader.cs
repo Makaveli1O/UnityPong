@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace GameHandler{
+namespace Assets.Scripts.GameHandler
+{
     public class SceneLoader : MonoBehaviour
     {
         public static void LoadScene(string sceneName)

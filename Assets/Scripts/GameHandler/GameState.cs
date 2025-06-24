@@ -1,4 +1,4 @@
-namespace GameHandler{
+namespace Assets.Scripts.GameHandler{
     public enum GameState
     {
         Playing,

@@ -10,6 +10,7 @@ public class GameBootstrapper : MonoBehaviour
     private IBlockBehaviourResolver _blockBehaviourResolver;
     private BlockWinConditionCounter _blockCounter;
     private ISceneLoader _sceneLoader;
+    [SerializeField] BlockSpawner _blockSpawner;
 
     void Awake()
     {
@@ -19,6 +20,11 @@ public class GameBootstrapper : MonoBehaviour
         _sceneLoader = GetComponent<SceneLoader>();
 
         RegisterServices();
+    }
+
+    void Start()
+    {
+        Instantiate(_blockSpawner);
     }
 
     private void RegisterServices()

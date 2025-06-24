@@ -1,7 +1,7 @@
 using Assets.Scripts.Blocks;
 using UnityEngine;
 
-namespace Game
+namespace GameHandler
 {
     public class GameHandler : MonoBehaviour
     {

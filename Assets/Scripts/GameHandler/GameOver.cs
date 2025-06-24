@@ -1,13 +1,12 @@
-using Assets.Scripts.SharedKernel;
-using Game;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class GameOver : MonoBehaviour
-{
-    private void OnCollisionEnter2D(Collision2D collision)
+namespace GameHandler{
+    public class GameOver : MonoBehaviour
     {
-        // TODO remove this is not ccorrect responsiblity
-        SceneManager.LoadScene("GameOver");
+        private const string _sceneName = "GameOver";
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            SceneLoader.LoadScene(_sceneName);
+        }
     }
 }

@@ -6,15 +6,15 @@ namespace Assets.Scripts.GameHandler
 {
     public class GameHandler : MonoBehaviour
     {
-        [SerializeField] private string _winScene = "WinScene";
-        [SerializeField] private string _gameOverScene = "GameOverScene";
+        private string _winScene = "WinScene";
+        private string _gameOverScene = "GameOverScene";
         private IGameWinCondition _winCondition;
         private GameState _currentState;
         private ISceneLoader _sceneLoader;
 
         private void Awake()
         {
-            _winCondition = new BlockWinConditionCounter();
+            _winCondition = SimpleServiceLocator.Resolve<IGameWinCondition>();
             _sceneLoader = SimpleServiceLocator.Resolve<ISceneLoader>();
         }
 

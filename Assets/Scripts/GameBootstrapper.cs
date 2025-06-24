@@ -8,7 +8,7 @@ public class GameBootstrapper : MonoBehaviour
 {
     private BlockFactory _blockFactory;
     private IBlockBehaviourResolver _blockBehaviourResolver;
-    private IBlockCounter _blockCounter;
+    private BlockWinConditionCounter _blockCounter;
     private ISceneLoader _sceneLoader;
 
     void Awake()
@@ -26,6 +26,7 @@ public class GameBootstrapper : MonoBehaviour
         SimpleServiceLocator.Register<IBlockFactory>(_blockFactory);
         SimpleServiceLocator.Register<IBlockBehaviourResolver>(_blockBehaviourResolver);
         SimpleServiceLocator.Register<IBlockCounter>(_blockCounter);
+        SimpleServiceLocator.Register<IGameWinCondition>(_blockCounter);
         SimpleServiceLocator.Register<ISceneLoader>(_sceneLoader);
     }
 }

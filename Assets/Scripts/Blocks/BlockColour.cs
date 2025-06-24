@@ -1,4 +1,4 @@
-namespace Assets.Scripts.Blocks.Domain
+namespace Assets.Scripts.Blocks
 {
     /// <summary>
     /// Represents the colour of a block.

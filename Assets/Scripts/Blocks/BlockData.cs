@@ -1,6 +1,4 @@
-using Assets.Scripts.Blocks.Domain;
 using Unity.Mathematics;
-using UnityEngine;
 
 namespace Assets.Scripts.Blocks
 {

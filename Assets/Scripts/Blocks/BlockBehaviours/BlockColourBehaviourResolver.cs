@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Assets.Scripts.Blocks.Domain;
+using Assets.Scripts.Blocks;
 using UnityEngine;
 
 namespace Assets.Scripts.Blocks

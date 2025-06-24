@@ -4,6 +4,7 @@ using UnityEngine;
 using Assets.Scripts.Blocks;
 using System.Reflection;
 using UnityEngine.SceneManagement;
+using Unity;
 
 [SetUpFixture]
 public class GlobalTestSetup
@@ -31,6 +32,10 @@ public class GlobalTestSetup
         //load behaviour resolver
         var behaviourResolver = new BlockColourBehaviourResolver();
         Assert.IsNotNull(behaviourResolver, "Global Setup: Behaviour resolver not found.");
+
+        //win condition register
+        var blockCounter = new BlockWinConditionCounter();
+        SimpleServiceLocator.Register<IBlockCounter>(blockCounter);
 
         // Since it is a dependency for the factory, we register it first
         SimpleServiceLocator.Register<IBlockBehaviourResolver>(behaviourResolver);

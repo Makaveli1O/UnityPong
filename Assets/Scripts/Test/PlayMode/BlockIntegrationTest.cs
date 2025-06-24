@@ -5,10 +5,10 @@ using UnityEngine.TestTools;
 using Assets.Scripts.Blocks;
 using Unity.Mathematics;
 using Assets.Scripts.Blocks.Domain;
-using Assets.Scripts.SharedKernel;
 using System.Reflection;
 using System.Linq;
 using System;
+using Assets.Scripts.SharedKernel;
 
 public class BlockIntegrationTest
 {
@@ -30,6 +30,8 @@ public class BlockIntegrationTest
     public void TearDown()
     {
         UnityEngine.Object.Destroy(blockSpawnerObject);
+        BlockWinConditionCounter counter = (BlockWinConditionCounter)SimpleServiceLocator.Resolve<IBlockCounter>();
+        counter.ResetCounter();
     }
 
     [UnityTest]
@@ -45,18 +47,16 @@ public class BlockIntegrationTest
     [UnityTest]
     public IEnumerator SpawnAndDestroyEmptyBlock_ShouldPass()
     {
-        var remainingBlocks = GameObject.FindGameObjectsWithTag("Block");
         // Spawn a block
         var block = SpawnEmptyBlock(new int2(0, 0));
         yield return null; // Wait a frame for Start/Awake
 
         Assert.IsNotNull(block, "Block was not spawned successfully.");
- remainingBlocks = GameObject.FindGameObjectsWithTag("Block");
         // Destroy the block
         blockSpawner.DestroyBlock(block);
         yield return null; // Wait a frame for destruction
 
-        remainingBlocks = GameObject.FindGameObjectsWithTag("Block");
+        var remainingBlocks = GameObject.FindGameObjectsWithTag("Block");
         Assert.IsTrue(remainingBlocks.Length == 0, "Block was not destroyed successfully.");
     }
 
@@ -88,6 +88,26 @@ public class BlockIntegrationTest
 
         var spawnedBlocks = GameObject.FindGameObjectsWithTag("Block");
         Assert.AreEqual(spawnCount, spawnedBlocks.Length, $"Expected {spawnCount} blocks to be spawned.");
+    }
+
+    [UnityTest]
+    public IEnumerator Should_TriggerWinCondition_When_AllBlocksDestroyed()
+    {
+        BlockWinConditionCounter blockCounter = (BlockWinConditionCounter)SimpleServiceLocator.Resolve<IBlockCounter>();
+
+        // spawn two blocks nd destroy them to trigger winning condition
+        int spawnCount = 2;
+        Assert.IsFalse(blockCounter.IsWinConditionMet());
+
+        for (int i = 0; i < spawnCount; i++)
+        {
+            Block block = SpawnEmptyBlock(new int2(i, 0));
+            blockSpawner.DestroyBlock(block);
+        }
+
+        
+        Assert.IsTrue(blockCounter.IsWinConditionMet());
+        yield return null;
     }
 
     [UnityTest]

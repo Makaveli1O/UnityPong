@@ -3,16 +3,30 @@ using UnityEngine;
 
 namespace Assets.Scripts.Level
 {
-    public class LevelDesigner : ILevelDesigner
+    public class LevelDesigner : MonoBehaviour, ILevelDesigner
     {
-        private BlockSpawner _blockSpawner;
+        private BlockSpawner _spawner;
+
+        void Awake()
+        {
+            _spawner = GetComponent<BlockSpawner>();
+        }
+
+        void Start()
+        {
+            // TODO remove. Just testing purposes
+
+            var level = new LevelBuilder()
+                .WithCheckerboard(5, 5)
+                .Build();
+
+            LoadLevel(level);
+        }
 
         public void LoadLevel(LevelData levelData)
         {
-            foreach (BlockData blockData in levelData.Blocks)
-            {
-                _blockSpawner.SpawnBlock(blockData);
-            }
+            foreach (BlockData data in levelData.Blocks)
+                _spawner.SpawnBlock(data);
         }
     }
 }

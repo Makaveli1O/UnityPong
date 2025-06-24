@@ -1,20 +1,21 @@
+using Assets.Scripts.Blocks;
 using Assets.Scripts.SharedKernel;
 using UnityEngine;
 
-namespace Game
+namespace Assets.Scripts.GameHandler
 {
-    //TODO use event system instead of checking in update whethe ror not win condition is met
     public class GameHandler : MonoBehaviour
     {
-        [SerializeField] private string _winScene = "WinScene";
-        [SerializeField] private string _gameOverScene = "GameOverScene";
-
+        private string _winScene = "WinScene";
+        private string _gameOverScene = "GameOverScene";
         private IGameWinCondition _winCondition;
         private GameState _currentState;
+        private ISceneLoader _sceneLoader;
 
         private void Awake()
         {
-            _winCondition = new BlockWinConditionCounter();
+            _winCondition = SimpleServiceLocator.Resolve<IGameWinCondition>();
+            _sceneLoader = SimpleServiceLocator.Resolve<ISceneLoader>();
         }
 
         private void Start()
@@ -51,11 +52,11 @@ namespace Game
                     break;
                 case GameState.GameOver:
                     Time.timeScale = 0f;
-                    SceneLoader.LoadScene(_gameOverScene);
+                    _sceneLoader.LoadScene(_gameOverScene);
                     break;
                 case GameState.Win:
                     Time.timeScale = 0f;
-                    SceneLoader.LoadScene(_winScene);
+                    _sceneLoader.LoadScene(_winScene);
                     break;
             }
         }

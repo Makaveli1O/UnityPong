@@ -39,8 +39,8 @@ namespace Assets.Scripts.Blocks
             }
             else
             {
-                Destroy(block.gameObject);
                 _blockCounter.OnBlockDestroyed();
+                Destroy(block.gameObject);
             }
         }
     }

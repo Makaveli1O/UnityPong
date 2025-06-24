@@ -30,6 +30,8 @@ public class BlockIntegrationTest
     public void TearDown()
     {
         UnityEngine.Object.Destroy(blockSpawnerObject);
+        BlockWinConditionCounter counter = (BlockWinConditionCounter)SimpleServiceLocator.Resolve<IBlockCounter>();
+        counter.ResetCounter();
     }
 
     [UnityTest]

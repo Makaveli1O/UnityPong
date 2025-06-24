@@ -1,65 +1,91 @@
-/*
 using NUnit.Framework;
 using UnityEngine;
+using Assets.Scripts.Blocks;
 using Assets.Scripts.GameHandler;
+using Assets.Scripts.SharedKernel;
+using UnityEngine.TestTools;
+using System.Collections;
+using NUnit.Framework.Constraints;
 
-[TestFixture]
-public class GameHandlerTests
+public class GameHandlerTest
 {
-    private GameHandler _handler;
+    private GameObject _gameHandlerGO;
+    private GameHandler _gameHandler;
     private StubSceneLoader _sceneLoader;
     private StubWinCondition _winCondition;
 
-    [SetUp]
-    public void SetUp()
+    [UnitySetUp]
+    public IEnumerator SetUp()
     {
-        _winCondition = new StubWinCondition();
         _sceneLoader = new StubSceneLoader();
-        
-        _handler = new GameObject().AddComponent<GameHandler>();
-        _handler.Init(_winCondition, _sceneLoader);
+        _winCondition = new StubWinCondition();
+
+        SimpleServiceLocator.Clear();
+        SimpleServiceLocator.Register<ISceneLoader>(_sceneLoader);
+        SimpleServiceLocator.Register<IGameWinCondition>(_winCondition);
+
+        _gameHandlerGO = new GameObject("GameHandler");
+        _gameHandler = _gameHandlerGO.AddComponent<GameHandler>();
+
+        yield return null; // Allow Monobehaviour lifecycle
     }
 
-    [TearDown]
-    public void TearDown()
+    [UnityTearDown]
+    public IEnumerator TearDown()
     {
-        Object.DestroyImmediate(_handler.gameObject);
+        Object.Destroy(_gameHandlerGO);
+        yield return null;
+
+
+        SimpleServiceLocator.Clear(); // MUST happen always
     }
 
-    [Test]
-    public void StartsInPlayingState()
+    [UnityTest]
+    public IEnumerator Should_TransitionToWin_WhenWinConditionMet()
     {
-        _handler.SetState(GameState.Playing);
-        Assert.AreEqual(GameState.Playing, _handler.CurrentState);
-    }
-
-    [Test]
-    public void TransitionToPaused()
-    {
-        _handler.SetState(GameState.Playing);
-        _handler.SetState(GameState.Paused);
-
-        Assert.AreEqual(GameState.Paused, _handler.CurrentState);
-    }
-
-    [Test]
-    public void TransitionToWin_WhenWinConditionMet()
-    {
-        _handler.SetState(GameState.Playing);
+        _gameHandler.SetState(GameState.Playing);
         _winCondition.Result = true;
 
-        _handler.TickWinCondition(); // Simulates Update()
+        yield return null; // allow Update()
 
-        Assert.AreEqual(GameState.Win, _handler.CurrentState);
+        Assert.AreEqual(GameState.Win, GetCurrentState(_gameHandler));
         Assert.AreEqual("WinScene", _sceneLoader.LastLoadedScene);
     }
 
-    [Test]
-    public void TransitionToGameOver_LoadsScene()
+    [UnityTest]
+    public IEnumerator ShouldPauseTime_WhenTransitionToPaused()
     {
-        _handler.SetState(GameState.GameOver);
+        _gameHandler.SetState(GameState.Paused);
+        yield return null;
+        Assert.AreEqual(0f, Time.timeScale);
+    }
+
+    [UnityTest]
+    public IEnumerator ShouldLoadGameOverScene_WhenStateIsGameOver()
+    {
+        _gameHandler.SetState(GameState.GameOver);
+        yield return null;
+
         Assert.AreEqual("GameOverScene", _sceneLoader.LastLoadedScene);
+        Assert.AreEqual(GameState.GameOver, GetCurrentState(_gameHandler));
+    }
+
+    [UnityTest]
+    public IEnumerator ShouldNotTriggerWin_IfNotInPlayingState()
+    {
+        _gameHandler.SetState(GameState.Paused);
+        _winCondition.Result = true;
+
+        yield return null;
+
+        Assert.AreEqual(GameState.Paused, GetCurrentState(_gameHandler));
+        Assert.IsNull(_sceneLoader.LastLoadedScene);
+    }
+
+    private GameState GetCurrentState(GameHandler handler)
+    {
+        return (GameState)typeof(GameHandler)
+            .GetField("_currentState", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+            .GetValue(handler);
     }
 }
-
-*/

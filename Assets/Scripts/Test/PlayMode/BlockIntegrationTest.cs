@@ -21,7 +21,31 @@ public class BlockIntegrationTest
     [SetUp]
     public void SetUp()
     {
-        // Create a new GameObject and add BlockSpawner component
+        // Clear and register services BEFORE creating BlockSpawner
+        SimpleServiceLocator.Clear();
+
+        // Load prefab
+        var blockPrefab = Resources.Load<GameObject>("Prefabs/Blocks/Block");
+        Assert.IsNotNull(blockPrefab, "Global Setup: Block prefab not found.");
+
+        var behaviourResolver = new BlockColourBehaviourResolver();
+        Assert.IsNotNull(behaviourResolver);
+
+        var blockCounter = new BlockWinConditionCounter();
+        SimpleServiceLocator.Register<IBlockCounter>(blockCounter);
+        SimpleServiceLocator.Register<IBlockBehaviourResolver>(behaviourResolver);
+
+        var factoryGO = new GameObject("BlockFactory");
+        var factory = factoryGO.AddComponent<BlockFactory>();
+        typeof(BlockFactory)
+            .GetField("_blockPrefab", BindingFlags.NonPublic | BindingFlags.Instance)
+            .SetValue(factory, blockPrefab);
+        typeof(BlockFactory)
+            .GetField("_resolver", BindingFlags.NonPublic | BindingFlags.Instance)
+            .SetValue(factory, behaviourResolver);
+        SimpleServiceLocator.Register<IBlockFactory>(factory);
+
+        // ✅ Now safe to add BlockSpawner (Awake will succeed)
         blockSpawnerObject = new GameObject("BlockSpawner");
         blockSpawner = blockSpawnerObject.AddComponent<BlockSpawner>();
     }

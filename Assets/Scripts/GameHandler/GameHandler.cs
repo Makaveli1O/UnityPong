@@ -1,4 +1,5 @@
 using Assets.Scripts.Blocks;
+using Assets.Scripts.SharedKernel;
 using UnityEngine;
 
 namespace Assets.Scripts.GameHandler
@@ -7,13 +8,14 @@ namespace Assets.Scripts.GameHandler
     {
         [SerializeField] private string _winScene = "WinScene";
         [SerializeField] private string _gameOverScene = "GameOverScene";
-
         private IGameWinCondition _winCondition;
         private GameState _currentState;
+        private ISceneLoader _sceneLoader;
 
         private void Awake()
         {
             _winCondition = new BlockWinConditionCounter();
+            _sceneLoader = SimpleServiceLocator.Resolve<ISceneLoader>();
         }
 
         private void Start()
@@ -50,11 +52,11 @@ namespace Assets.Scripts.GameHandler
                     break;
                 case GameState.GameOver:
                     Time.timeScale = 0f;
-                    SceneLoader.LoadScene(_gameOverScene);
+                    _sceneLoader.LoadScene(_gameOverScene);
                     break;
                 case GameState.Win:
                     Time.timeScale = 0f;
-                    SceneLoader.LoadScene(_winScene);
+                    _sceneLoader.LoadScene(_winScene);
                     break;
             }
         }

@@ -1,4 +1,5 @@
 using Assets.Scripts.Blocks;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Assets.Scripts.Level
@@ -14,13 +15,16 @@ namespace Assets.Scripts.Level
 
         void Start()
         {
-            // TODO remove. Just testing purposes
+            LoadLevel(GetLevel0());
+        }
 
-            var level = new LevelBuilder()
-                .WithCheckerboard(5, 5)
+        public LevelData GetLevel0()
+        {
+            return new LevelBuilder()
+                .WithBlock(BlockColour.Red, 3, 5)
+                .WithBlock(BlockColour.Blue, 4, 5)
+                .WithCheckerboard(5, 2) // rows x columns
                 .Build();
-
-            LoadLevel(level);
         }
 
         public void LoadLevel(LevelData levelData)

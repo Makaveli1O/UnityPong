@@ -28,6 +28,11 @@ public class GameBootstrapper : MonoBehaviour
 
     void Start()
     {
+        InitializeLevelDesigner();
+    }
+
+    private void InitializeLevelDesigner()
+    {
         Instantiate(_levelDesignerPrefab);
     }
 

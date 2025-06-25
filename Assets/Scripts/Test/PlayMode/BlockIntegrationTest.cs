@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using Assets.Scripts.Blocks;
 using Unity.Mathematics;
-using Assets.Scripts.Blocks.Domain;
 using System.Reflection;
 using System.Linq;
 using System;

@@ -1,6 +1,4 @@
-using Assets.Scripts.Blocks.Domain;
 using Unity.Mathematics;
-using UnityEngine;
 
 namespace Assets.Scripts.Blocks
 {
@@ -16,7 +14,7 @@ namespace Assets.Scripts.Blocks
     {
         public BlockShape Shape { get; }
         public BlockColour Colour { get; }
-        public int2 Position { get; }
+        public int2 Position { get; set; }
 
         public BlockData(BlockShape shape, BlockColour colour, int2 position)
         {

@@ -24,7 +24,7 @@ namespace Assets.Scripts.Blocks
             Shape = shape;
             Colour = colour;
             Position = position;
-            Behaviours = behaviours;
+            Behaviours = behaviours ?? new List<BehaviourConfig>();
         }
     }
 }

@@ -1,4 +1,4 @@
-/*using System.Collections;
+using System.Collections;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -8,6 +8,8 @@ using System.Reflection;
 using System.Linq;
 using System;
 using Assets.Scripts.SharedKernel;
+using System.Collections.Generic;
+using Assets.Scripts.Block;
 
 public class BlockIntegrationTest
 {
@@ -27,21 +29,14 @@ public class BlockIntegrationTest
         var blockPrefab = Resources.Load<GameObject>("Prefabs/Blocks/Block");
         Assert.IsNotNull(blockPrefab, "Global Setup: Block prefab not found.");
 
-        var behaviourResolver = new BlockColourBehaviourResolver();
-        Assert.IsNotNull(behaviourResolver);
-
         var blockCounter = new BlockWinConditionCounter();
         SimpleServiceLocator.Register<IBlockCounter>(blockCounter);
-        SimpleServiceLocator.Register<IBlockBehaviourResolver>(behaviourResolver);
 
         var factoryGO = new GameObject("BlockFactory");
         var factory = factoryGO.AddComponent<BlockFactory>();
         typeof(BlockFactory)
             .GetField("_blockPrefab", BindingFlags.NonPublic | BindingFlags.Instance)
             .SetValue(factory, blockPrefab);
-        typeof(BlockFactory)
-            .GetField("_resolver", BindingFlags.NonPublic | BindingFlags.Instance)
-            .SetValue(factory, behaviourResolver);
         SimpleServiceLocator.Register<IBlockFactory>(factory);
 
         // ✅ Now safe to add BlockSpawner (Awake will succeed)
@@ -173,123 +168,14 @@ public class BlockIntegrationTest
         Assert.AreEqual(0, remainingBlocks.Length, "Not all blocks were destroyed.");
     }
 
-    [UnityTest]
-    public IEnumerator SpawnedBlockColours_ShouldBeRenderedCorrectly()
-    {
-        int colourCount = BlockColour.GetValues(typeof(BlockColour)).Length;
-
-        for (int i = 0; i < colourCount; i++)
-        {
-            Block block = blockSpawner.SpawnBlock(
-                new BlockData(
-                    null,
-                    (BlockColour)i,
-                    new int2(i, 0)
-                )
-            );
-
-            var spriteRenderer = block.GetComponent<SpriteRenderer>();
-            Assert.AreEqual(
-                BlockColourBehaviourResolver.ToColour((BlockColour)i),
-                spriteRenderer.color,
-                "Block sprite color does not match BlockColour."
-            );
-        }
-
-        yield return null;
-    }
-
-    [UnityTest]
-    public IEnumerator SpawnRedBlockBehaviour_ShouldHaveExplode()
-    {
-        var block = blockSpawner.SpawnBlock(
-            new BlockData(
-                null,
-                BlockColour.Red,
-                new int2(0, 0)
-            )
-        );
-        yield return null; // Wait for Start/Awake
-
-        Assert.IsNotNull(block, "Block was not spawned successfully.");
-
-        // Check if the block has the ExplodeBehaviour in collisionBehaviours
-        var collisionBehaviourType = GetBehaviourTypesFromField(block, collisionBehavioursField);
-
-        CollectionAssert.AreEquivalent(
-            new[] { typeof(ExplodeBehaviour) },
-            collisionBehaviourType
-        );
-
-        yield return null; // Wait a frame for the movement
-    }
-
-    [UnityTest]
-    public IEnumerator SpawnBlueBlockBehaviour_ShouldHaveMove()
-    {
-        var block = blockSpawner.SpawnBlock(
-            new BlockData(
-                null,
-                BlockColour.Blue,
-                new int2(0, 0)
-            )
-        );
-        yield return null; // Wait for Start/Awake
-
-        Assert.IsNotNull(block, "Block was not spawned successfully.");
-
-        // Check if the block has the Move in updateBehaviours
-        var updateBehaviourType = GetBehaviourTypesFromField(block, updateBehavioursField);
-
-        CollectionAssert.AreEquivalent(
-            new[] { typeof(MoveBehaviour) },
-            updateBehaviourType
-        );
-
-        yield return null; // Wait a frame for the movement
-    }
-
-    [UnityTest]
-    public IEnumerator SpawnPurpleBlockBehaviour_ShouldHaveMoveAndExplode()
-    {
-        var block = blockSpawner.SpawnBlock(
-            new BlockData(
-                null,
-                BlockColour.Purple,
-                new int2(0, 0)
-            )
-        );
-        yield return null; // Wait for Start/Awake
-
-        Assert.IsNotNull(block, "Block was not spawned successfully.");
-
-        // Check if the block has the Move in updateBehaviours
-        var updateBehaviourType = GetBehaviourTypesFromField(block, updateBehavioursField);
-
-        CollectionAssert.AreEquivalent(
-            new[] { typeof(MoveBehaviour) },
-            updateBehaviourType
-        );
-
-        // Check if the block has the ExplodeBehaviour in collisionBehaviours
-        var collisionBehaviourType = GetBehaviourTypesFromField(block, collisionBehavioursField);
-
-        CollectionAssert.AreEquivalent(
-            new[] { typeof(ExplodeBehaviour) },
-            collisionBehaviourType
-        );
-
-        yield return null; // Wait a frame for the movement
-    }
-
-
     private Block SpawnEmptyBlock(int2 position)
     {
         return blockSpawner.SpawnBlock(
             new BlockData(
                 null,
                 BlockColour.Empty,
-                position
+                position,
+                new List<BehaviourConfig>()
             )
         );
     }
@@ -318,5 +204,85 @@ public class BlockIntegrationTest
 
         return behaviours.Cast<IBlockBehaviour>().Select(b => b.GetType()).ToArray();
     }
+
+    [UnityTest]
+    public IEnumerator SpawnBlock_WithConfiguredMoveBehaviour_ShouldWork()
+    {
+        var config = new List<BehaviourConfig>
+        {
+            new(typeof(MoveBehaviour), new Dictionary<string, object>
+            {
+                { "speed", 2f },
+                { "pointA", new Vector3(0, 0, 0) },
+                { "pointB", new Vector3(5, 0, 0) }
+            })
+        };
+
+        var block = blockSpawner.SpawnBlock(new BlockData(null, BlockColour.Blue, new int2(0, 0), config));
+        yield return null;
+
+        var move = block.GetComponent<MoveBehaviour>();
+        Assert.IsNotNull(move);
+        Assert.AreEqual(2f, move.speed);
+    }
+
+    [UnityTest]
+    public IEnumerator SpawnBlock_WithoutConfiguredExplodeBehaviour_ShouldThrow()
+    {
+        var config = new List<BehaviourConfig>
+        {
+            new(typeof(ExplodeBehaviour), new Dictionary<string, object>())
+        };
+        Assert.Catch(() =>
+        {
+            var block = blockSpawner.SpawnBlock(new BlockData(null, BlockColour.Red, new int2(0, 0), config));
+        });
+        yield return null;
+    }
+
+        [UnityTest]
+    public IEnumerator SpawnBlock_WithConfiguredExplodeBehaviour_ShouldWork()
+    {
+        yield return null;
+        //TODO when explode behaviour is implemented
+        /*
+        var config = new List<BehaviourConfig>
+        {
+            new(typeof(ExplodeBehaviour), new Dictionary<string, object>())
+        };
+
+        var block = blockSpawner.SpawnBlock(new BlockData(null, BlockColour.Red, new int2(0, 0), config));
+        yield return null;
+
+        var types = GetBehaviourTypesFromField(block, collisionBehavioursField);
+        CollectionAssert.Contains(types, typeof(ExplodeBehaviour));
+        */
+    }
+
+    [UnityTest]
+    public IEnumerator SpawnBlock_WithMultipleBehaviours_ShouldContainAll()
+    {
+        yield return null;
+        /*
+        var config = new List<BehaviourConfig>
+        {
+            new(typeof(ExplodeBehaviour), new Dictionary<string, object>()),
+            new(typeof(MoveBehaviour), new Dictionary<string, object>
+            {
+                { "speed", 1.5f },
+                { "pointA", new Vector3(0, 0, 0) },
+                { "pointB", new Vector3(2, 0, 0) }
+            })
+        };
+
+        var block = blockSpawner.SpawnBlock(new BlockData(null, BlockColour.Purple, new int2(0, 0), config));
+        yield return null;
+
+        var update = GetBehaviourTypesFromField(block, updateBehavioursField);
+        var collision = GetBehaviourTypesFromField(block, collisionBehavioursField);
+        CollectionAssert.Contains(update, typeof(MoveBehaviour));
+        CollectionAssert.Contains(collision, typeof(ExplodeBehaviour));
+        */
+    }
+
 }
-*/

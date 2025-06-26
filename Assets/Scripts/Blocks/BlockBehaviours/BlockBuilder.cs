@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Assets.Scripts.Block;
 using UnityEngine;
 
 namespace Assets.Scripts.Blocks
@@ -6,13 +8,11 @@ namespace Assets.Scripts.Blocks
     {
         private readonly GameObject _go;
         private readonly Block _block;
-        private readonly IBlockBehaviourResolver _resolver;
 
-        public BlockBuilder(GameObject go, IBlockBehaviourResolver resolver)
+        public BlockBuilder(GameObject go)
         {
             _go = go;
             _block = go.GetComponent<Block>();
-            _resolver = resolver;
         }
 
         public BlockBuilder WithData(BlockData data)
@@ -21,17 +21,17 @@ namespace Assets.Scripts.Blocks
             return this;
         }
 
-        public BlockBuilder WithColour(BlockColour colour)
+        public BlockBuilder AddBehaviours(List<BehaviourConfig> behaviourConfigs)
         {
-            _block.SetColour(BlockColourBehaviourResolver.ToColour(colour));
-            return this;
-        }
-
-        public BlockBuilder AddBehavioursForColour(BlockColour colour)
-        {
-            foreach (var type in _resolver.Resolve(colour))
+            foreach (var config in behaviourConfigs)
             {
-                var instance = (MonoBehaviour)_go.AddComponent(type);
+                var instance = (MonoBehaviour)_go.AddComponent(config.BehaviourType);
+
+                if (instance is IConfigurableBehaviour configurable && config.Parameters != null)
+                {
+                    configurable.Configure(config.Parameters);
+                }
+
                 if (instance is IUpdateBehaviour update)
                     _block.AddUpdateBehaviour(update);
                 if (instance is ICollisionBehaviour collision)
@@ -41,9 +41,16 @@ namespace Assets.Scripts.Blocks
             return this;
         }
 
+        public BlockBuilder WithColour(Color color)
+        {
+            _block.SetColour(color);
+            return this;
+        }
+
         public Block Build()
         {
             return _block;
         }
     }
+
 }

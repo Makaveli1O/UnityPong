@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Assets.Scripts.Block;
 using Assets.Scripts.Blocks;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace Assets.Scripts.Level
 {
@@ -8,40 +10,43 @@ namespace Assets.Scripts.Level
     {
         private readonly List<BlockData> _entries = new();
 
+        List<BehaviourConfig> GetDefaultBehavioursForColour(BlockColour colour)
+        {
+            return colour switch
+            {
+                BlockColour.Red => new List<BehaviourConfig> 
+                { 
+                    new BehaviourConfig(typeof(ExplodeBehaviour), new Dictionary<string, object>()) 
+                },
+                BlockColour.Blue => new List<BehaviourConfig> 
+                { 
+                    new BehaviourConfig(typeof(MoveBehaviour), new Dictionary<string, object>
+                    {
+                        { "speed", 0.5f }
+                    })
+                },
+                _ => new List<BehaviourConfig>()
+            };
+        }
+
         public LevelBuilder WithBlock(BlockColour colour, int x, int y)
         {
-            _entries.Add(
-                new BlockData(
-                    null,
-                    colour,
-                    new int2(x, y)
-                )
-            );
+            var behaviourConfigs = GetDefaultBehavioursForColour(colour);
+
+            _entries.Add(new BlockData(
+                null,
+                colour,
+                new int2(x, y),
+                behaviourConfigs
+            ));
             return this;
         }
 
-        public LevelBuilder WithRow(BlockColour colour, int y, int length)
-        {
-            for (int x = 0; x < length; x++)
-                WithBlock(colour, x, y);
-
-            return this;
-        }
-
-        public LevelBuilder WithCheckerboard(int width, int height)
-        {
-            for (int y = 0; y < height; y++)
-                for (int x = 0; x < width; x++)
-                {
-                    var colour = (x + y) % 2 == 0 ? BlockColour.Red : BlockColour.Blue;
-                    WithBlock(colour, x, y);
-                }
-            return this;
-        }
 
         public LevelData Build()
         {
             return new LevelData { Blocks = _entries };
         }
     }
+
 }

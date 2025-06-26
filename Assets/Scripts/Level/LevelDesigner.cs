@@ -23,7 +23,6 @@ namespace Assets.Scripts.Level
             return new LevelBuilder()
                 .WithBlock(BlockColour.Red, 3, 5)
                 .WithBlock(BlockColour.Blue, 4, 5)
-                .WithCheckerboard(5, 2) // rows x columns
                 .Build();
         }
 

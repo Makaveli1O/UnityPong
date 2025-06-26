@@ -17,6 +17,16 @@ namespace Assets.Scripts.Blocks
             pointB.z = pointA.z;
         }
 
+        public void Configure(object parameters)
+        {
+            if (parameters is MoveParams p)
+            {
+                speed = p.Speed;
+                pointA = p.PointA;
+                pointB = p.PointB;
+            }
+        }
+
         public void Execute(Block context)
         {
             MoveBackAndForth();

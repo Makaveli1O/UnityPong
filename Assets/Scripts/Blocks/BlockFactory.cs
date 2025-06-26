@@ -29,9 +29,8 @@ namespace Assets.Scripts.Blocks
                 parent
             );
 
-            Block block = new BlockBuilder(go, _resolver)
-                .AddBehavioursForColour(data.Colour)
-                .WithColour(data.Colour)
+            Block block = new BlockBuilder(go)
+                .AddBehaviours(data.Behaviours)
                 .WithData(data)
                 .Build();
                 

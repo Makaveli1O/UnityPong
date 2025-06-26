@@ -1,4 +1,3 @@
-
 using Assets.Scripts.Blocks;
 using Assets.Scripts.SharedKernel;
 using UnityEngine;
@@ -6,28 +5,28 @@ namespace Assets.Scripts.Blocks
 {
     public class MoveBehaviour : MonoBehaviour, IUpdateBehaviour
     {
-        public Vector3 pointB;
-        public float speed = 1.0f;
+        public float speed = 0.5f;
         private Vector3 pointA;
-        private float time = 0f;
-        [SerializeField] private const float minMoveRange = 1f;
-        [SerializeField] private const float maxMoveRange = 3f;
+        private Vector3 pointB;
+        private float time;
 
         void Start()
         {
             pointA = transform.position;
-            pointB = Utils2D.GetRandomVisiblePoint(transform.position, minMoveRange, maxMoveRange);
+            pointB = Utils2D.GetAxisAlignedVisiblePoint(transform.position);
+            pointB.z = pointA.z;
         }
 
         public void Execute(Block context)
         {
-            MoveBackAndForth(context);
+            MoveBackAndForth();
         }
 
-        private void MoveBackAndForth(Block context)
+        private void MoveBackAndForth()
         {
             time += Time.deltaTime * speed;
-            transform.position = Vector3.Lerp(pointA, pointB, Mathf.PingPong(time, 1));
+            float t = Mathf.PingPong(time, 1f);
+            transform.position = Vector3.Lerp(pointA, pointB, t);
         }
     }
 }

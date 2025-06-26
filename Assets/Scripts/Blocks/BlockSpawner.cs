@@ -27,7 +27,15 @@ namespace Assets.Scripts.Blocks
         public Block SpawnBlock(BlockData blockData)
         {
             Vector3 gridPosition = new Vector3(blockData.Position.x, blockData.Position.y, 0);
-            Block block = _blockFactory.SpawnBlock(blockData with { Position = new int2((int)gridPosition.x, (int)gridPosition.y) }, transform);
+            Block block = _blockFactory.SpawnBlock(
+                blockData with
+                {
+                    Position = new int2(
+                        (int)gridPosition.x,
+                        (int)gridPosition.y
+                    )
+                },transform
+            );
             block.transform.position = gridPosition;
 
             _blockCounter.OnBlockSpawned();

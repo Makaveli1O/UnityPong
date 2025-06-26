@@ -1,58 +1,50 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts.Blocks
 {
     public class Block : MonoBehaviour
     {
-        private BlockData _blockData;
+        public BlockData Data { get; private set; }
         private SpriteRenderer _spriteRenderer;
-        // Behaviour triggers
-        private List<IUpdateBehaviour> _updateBehaviours;
-        private List<ICollisionBehaviour> _collisionBehaviours;
+        private readonly List<IUpdateBehaviour> _updateBehaviours = new();
+        private readonly List<ICollisionBehaviour> _collisionBehaviours = new();
 
-        public void ExecuteUpdateBehaviours()
+        public void SetData(BlockData data)
         {
-            foreach (var behaviour in _updateBehaviours)
-            {
-                behaviour.Execute(this);
-            }
+            Data = data;
         }
 
-        public void ExecuteCollisionBehaviours()
+        public void AddUpdateBehaviour(IUpdateBehaviour behaviour)
         {
-            foreach (var behaviour in _collisionBehaviours)
-            {
-                behaviour.Execute(this);
-            }
+            _updateBehaviours.Add(behaviour);
         }
 
-        public void Initialize(BlockData blockData)
+        public void AddCollisionBehaviour(ICollisionBehaviour behaviour)
         {
-            _blockData = blockData;
-            _spriteRenderer = GetComponent<SpriteRenderer>();
+            _collisionBehaviours.Add(behaviour);
+        }
 
+        public void SetColour(Color color)
+        {
             if (_spriteRenderer == null)
-            {
-                throw new System.Exception("SpriteRenderer component is missing on the Block GameObject.");
-            }
-            
-            _updateBehaviours = GetComponents<IUpdateBehaviour>().ToList();
-            _collisionBehaviours = GetComponents<ICollisionBehaviour>().ToList();
-
-            _spriteRenderer.color = BlockColourBehaviourResolver.ToColour(blockData.Colour);
+                _spriteRenderer = GetComponent<SpriteRenderer>();
+            _spriteRenderer.color = color;
         }
 
         private void Update()
         {
-            ExecuteUpdateBehaviours();
+            foreach (var behaviour in _updateBehaviours)
+                behaviour.Execute(this);
         }
 
         private void OnCollisionExit2D()
         {
-            ExecuteCollisionBehaviours();
+            foreach (var behaviour in _collisionBehaviours)
+                behaviour.Execute(this);
         }
     }
+
+
 }
 

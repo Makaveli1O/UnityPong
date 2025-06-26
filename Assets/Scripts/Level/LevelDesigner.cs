@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Assets.Scripts.Blocks;
 using Unity.Mathematics;
 using UnityEngine;
@@ -21,8 +22,19 @@ namespace Assets.Scripts.Level
         public LevelData GetLevel0()
         {
             return new LevelBuilder()
-                .WithBlock(BlockColour.Red, 3, 5)
-                .WithBlock(BlockColour.Blue, 4, 5)
+                .WithBlock(
+                    BlockColour.Blue,
+                    new int2(3,4),
+                    new List<Block.BehaviourConfig>
+                    {
+                        new(
+                            typeof(MoveBehaviour), new Dictionary<string, object>
+                                {
+                                    { "speed", 10f }
+                                }
+                            )
+                    }
+                )
                 .Build();
         }
 

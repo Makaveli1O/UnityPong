@@ -10,7 +10,43 @@ namespace Assets.Scripts.Level
     {
         private readonly List<BlockData> _entries = new();
 
-        List<BehaviourConfig> GetDefaultBehavioursForColour(BlockColour colour)
+        public LevelBuilder WithBlock(BlockColour colour, int2 position)
+        {
+            var behaviourConfigs = GetDefaultBehavioursForColour(colour);
+
+            _entries.Add(new BlockData(
+                null,
+                colour,
+                position,
+                behaviourConfigs
+            ));
+            return this;
+        }
+
+        public LevelBuilder WithBlock(
+            BlockColour colour,
+            int2 position,
+            List<BehaviourConfig> behaviourConfigs
+        )
+        {
+            _entries.Add(
+                new BlockData(
+                    null,
+                    colour,
+                    position,
+                    behaviourConfigs
+                )
+            );
+            return this;
+        }
+
+
+        public LevelData Build()
+        {
+            return new LevelData { Blocks = _entries };
+        }
+
+        private List<BehaviourConfig> GetDefaultBehavioursForColour(BlockColour colour)
         {
             return colour switch
             {
@@ -27,25 +63,6 @@ namespace Assets.Scripts.Level
                 },
                 _ => new List<BehaviourConfig>()
             };
-        }
-
-        public LevelBuilder WithBlock(BlockColour colour, int x, int y)
-        {
-            var behaviourConfigs = GetDefaultBehavioursForColour(colour);
-
-            _entries.Add(new BlockData(
-                null,
-                colour,
-                new int2(x, y),
-                behaviourConfigs
-            ));
-            return this;
-        }
-
-
-        public LevelData Build()
-        {
-            return new LevelData { Blocks = _entries };
         }
     }
 

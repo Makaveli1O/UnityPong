@@ -23,14 +23,14 @@ namespace Assets.Scripts.Blocks
 
         public BlockBuilder AddBehaviours(List<BehaviourConfig> behaviourConfigs)
         {
-            foreach (var config in behaviourConfigs)
+            foreach (BehaviourConfig config in behaviourConfigs)
             {
-                var instance = (MonoBehaviour)_go.AddComponent(config.BehaviourType);
+                MonoBehaviour instance = (MonoBehaviour)_go.AddComponent(config.BehaviourType);
 
-                if (instance is IConfigurableBehaviour configurable && config.Parameters != null)
-                {
-                    configurable.Configure(config.Parameters);
-                }
+                if (instance is IConfigurableBehaviour && config.Parameters != null)
+                    instance = Configure(instance, config);
+                else
+                    throw new System.Exception("Provided config is either not configurable, or parameters for the behaviour are not provided.");
 
                 if (instance is IUpdateBehaviour update)
                     _block.AddUpdateBehaviour(update);
@@ -50,6 +50,28 @@ namespace Assets.Scripts.Blocks
         public Block Build()
         {
             return _block;
+        }
+
+        // Configre the configurable behaviour of the block
+        private MonoBehaviour Configure(MonoBehaviour instance, BehaviourConfig config)
+        {
+            foreach (var param in config.Parameters)
+            {
+                var field = config.BehaviourType.GetField(param.Key);
+                if (field != null)
+                {
+                    field.SetValue(instance, param.Value);
+                    continue;
+                }
+
+                var prop = config.BehaviourType.GetProperty(param.Key);
+                if (prop != null && prop.CanWrite)
+                {
+                    prop.SetValue(instance, param.Value);
+                }
+            }
+
+            return instance;
         }
     }
 

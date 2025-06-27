@@ -21,69 +21,17 @@ namespace Assets.Scripts.Level
 
         public LevelData GetLevel0()
         {
+            // TODO FIX CREATION OF BEHAVIOUR IN A BETTER WAY
             return new LevelBuilder()
                 .WithBlock(
-                    BlockColour.Blue,
-                    new int2(0, 4),
-                    new List<BehaviourConfig>
-                    {
-                        new(
-                            typeof(MoveBehaviour), new Dictionary<string, object>
-                                {
-                                    { "speed", 0.2f }
-                                }
-                            )
-                    }
-                )
-                .WithBlock(
-                    BlockColour.Blue,
-                    new int2(1, 1),
-                    new List<BehaviourConfig>
-                    {
-                        new(
-                            typeof(MoveBehaviour), new Dictionary<string, object>
-                                {
-                                    { "speed", 1f }
-                                }
-                            )
-                    }
-                )
-                .WithBlock(
-                    BlockColour.Blue,
-                    new int2(2, 3),
-                    new List<BehaviourConfig>
-                    {
-                        new(
-                            typeof(MoveBehaviour), new Dictionary<string, object>
-                                {
-                                    { "speed", 5f }
-                                }
-                            )
-                    }
-                )
-                .WithBlock(
-                    BlockColour.Red,
-                    new int2(0, 5),
-                    new List<BehaviourConfig>
-                    {
-                        new(typeof(ExplodeBehaviour), new Dictionary<string, object>{})
-                    }
-                )
-                    .WithBlock(
                     BlockColour.Red,
                     new int2(2, 2),
-                    new List<BehaviourConfig>
-                    {
-                        new(typeof(ExplodeBehaviour), new Dictionary<string, object>{})
-                    }
+                    new List<BehaviourConfig> { new(typeof(ExplodeBehaviour), new Dictionary<string, object> { }) }
                 )
                 .WithBlock(
-                    BlockColour.Red,
-                    new int2(2, 0),
-                    new List<BehaviourConfig>
-                    {
-                        new(typeof(ExplodeBehaviour), new Dictionary<string, object>{})
-                    }
+                    BlockColour.Blue,
+                    new int2(3, 4),
+                    new List<BehaviourConfig> { new(typeof(MoveBehaviour), new Dictionary<string, object> { }) }
                 )
                 .Build();
         }

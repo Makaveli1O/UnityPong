@@ -33,7 +33,7 @@ namespace Assets.Scripts.Blocks
                         throw new System.Exception("Provided parameters for configurable behaviours are invalid.");
 
                 if (instance is IUpdateBehaviour update)
-                        _block.AddUpdateBehaviour(update);
+                    _block.AddUpdateBehaviour(update);
                 if (instance is ICollisionBehaviour collision)
                     _block.AddCollisionBehaviour(collision);
             }

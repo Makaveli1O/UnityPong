@@ -4,20 +4,15 @@ namespace Assets.Scripts.Blocks
 {
     public class MoveBehaviour : MonoBehaviour, IUpdateBehaviour, IConfigurableBehaviour
     {
-        public float speed  = 0.5f;
-        public Vector3 pointA;
-        public Vector3 pointB;
+        public float speed = 0.5f;
+        public Vector3 endMovementPoint = Vector3.zero;
+        private Vector3 _initialPosition;
+        private bool _initialized = false;
         private float time;
-
-        void Start()
-        {
-            pointA = transform.position;
-            pointB = Utils2D.GetAxisAlignedVisiblePoint(transform.position);
-            pointB.z = pointA.z;
-        }
 
         public void OnUpdateExecute(Block context)
         {
+            if (!_initialized) Initialize(context);
             MoveBackAndForth();
         }
 
@@ -25,7 +20,16 @@ namespace Assets.Scripts.Blocks
         {
             time += Time.deltaTime * speed;
             float t = Mathf.PingPong(time, 1f);
-            transform.position = Vector3.Lerp(pointA, pointB, t);
+            transform.position = Vector3.Lerp(_initialPosition, endMovementPoint, t);
+        }
+
+        private void Initialize(Block context)
+        {
+            _initialPosition = new Vector3(context.Data.Position.x, context.Data.Position.y);
+            if (endMovementPoint.Equals(Vector3.zero))
+                endMovementPoint = Utils2D.GetAxisAlignedVisiblePoint(_initialPosition);
+
+            _initialized = true;
         }
     }
 }

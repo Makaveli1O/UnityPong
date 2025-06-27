@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Assets.Scripts.Blocks;
 using Unity.Mathematics;
@@ -27,6 +28,9 @@ namespace Assets.Scripts.Level
             List<BehaviourConfig> behaviourConfigs
         )
         {
+            if (behaviourConfigs == null)
+                throw new ArgumentNullException(nameof(behaviourConfigs));
+                
             _entries.Add(
                 new BlockData(
                     null,

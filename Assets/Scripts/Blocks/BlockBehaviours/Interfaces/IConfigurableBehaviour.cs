@@ -1,3 +1,4 @@
-namespace Assets.Scripts.Block{
+namespace Assets.Scripts.Blocks
+{
     public interface IConfigurableBehaviour{}
 }

@@ -1,6 +1,6 @@
 using System;
 
-namespace Assets.Scripts.Block
+namespace Assets.Scripts.Blocks
 {
     public record BehaviourConfig(Type BehaviourType, System.Collections.Generic.Dictionary<string, object> Parameters)
     {

@@ -28,89 +28,61 @@ namespace Assets.Scripts.Level
                     new List<BehaviourConfig>
                     {
                         new(
-                            typeof(ExplodeBehaviour), new Dictionary<string, object>
+                            typeof(MoveBehaviour), new Dictionary<string, object>
                                 {
-                                    { "shrinkFactor", 0.2f }
+                                    { "speed", 0.2f }
                                 }
                             )
                     }
                 )
                 .WithBlock(
                     BlockColour.Blue,
-                    new int2(0, 3),
+                    new int2(1, 1),
                     new List<BehaviourConfig>
                     {
                         new(
-                            typeof(ExplodeBehaviour), new Dictionary<string, object>
+                            typeof(MoveBehaviour), new Dictionary<string, object>
                                 {
-                                    { "shrinkFactor", 10f }
+                                    { "speed", 1f }
                                 }
                             )
                     }
                 )
                 .WithBlock(
                     BlockColour.Blue,
-                    new int2(0, 2),
+                    new int2(2, 3),
                     new List<BehaviourConfig>
                     {
                         new(
-                            typeof(ExplodeBehaviour), new Dictionary<string, object>
+                            typeof(MoveBehaviour), new Dictionary<string, object>
                                 {
-                                    { "shrinkFactor", 10f }
+                                    { "speed", 5f }
                                 }
                             )
                     }
                 )
                 .WithBlock(
-                    BlockColour.Blue,
-                    new int2(0, 1),
+                    BlockColour.Red,
+                    new int2(0, 5),
                     new List<BehaviourConfig>
                     {
-                        new(
-                            typeof(ExplodeBehaviour), new Dictionary<string, object>
-                                {
-                                    { "shrinkFactor", 10f }
-                                }
-                            )
+                        new(typeof(ExplodeBehaviour), new Dictionary<string, object>{})
+                    }
+                )
+                    .WithBlock(
+                    BlockColour.Red,
+                    new int2(2, 2),
+                    new List<BehaviourConfig>
+                    {
+                        new(typeof(ExplodeBehaviour), new Dictionary<string, object>{})
                     }
                 )
                 .WithBlock(
-                    BlockColour.Blue,
-                    new int2(0, 0),
+                    BlockColour.Red,
+                    new int2(2, 0),
                     new List<BehaviourConfig>
                     {
-                        new(
-                            typeof(ExplodeBehaviour), new Dictionary<string, object>
-                                {
-                                    { "shrinkFactor", 10f }
-                                }
-                            )
-                    }
-                )
-                .WithBlock(
-                    BlockColour.Blue,
-                    new int2(0, -1),
-                    new List<BehaviourConfig>
-                    {
-                        new(
-                            typeof(ExplodeBehaviour), new Dictionary<string, object>
-                                {
-                                    { "shrinkFactor", 10f }
-                                }
-                            )
-                    }
-                )
-                .WithBlock(
-                    BlockColour.Blue,
-                    new int2(0,-2),
-                    new List<BehaviourConfig>
-                    {
-                        new(
-                            typeof(ExplodeBehaviour), new Dictionary<string, object>
-                                {
-                                    { "shrinkFactor", 10f }
-                                }
-                            )
+                        new(typeof(ExplodeBehaviour), new Dictionary<string, object>{})
                     }
                 )
                 .Build();

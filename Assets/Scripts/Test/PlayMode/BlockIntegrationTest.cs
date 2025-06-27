@@ -196,20 +196,6 @@ public class BlockIntegrationTest
     }
 
     [UnityTest]
-    public IEnumerator SpawnBlock_WithoutConfiguredExplodeBehaviour_ShouldThrow()
-    {
-        var config = new List<BehaviourConfig>
-        {
-            new(typeof(ExplodeBehaviour), new Dictionary<string, object>())
-        };
-        Assert.Catch(() =>
-        {
-            var block = blockSpawner.SpawnBlock(new BlockData(null, BlockColour.Red, new int2(0, 0), config));
-        });
-        yield return null;
-    }
-
-    [UnityTest]
     public IEnumerator SpawnBlock_WithConfiguredExplodeBehaviour_ShouldWork()
     {
         yield return null;

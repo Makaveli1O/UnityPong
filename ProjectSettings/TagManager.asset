@@ -6,6 +6,8 @@ TagManager:
   tags:
   - BlockSpawner
   - Block
+  - Shrapnel
+  - Ball
   layers:
   - Default
   - TransparentFX

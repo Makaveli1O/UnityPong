@@ -9,7 +9,6 @@ using System.Linq;
 using System;
 using Assets.Scripts.SharedKernel;
 using System.Collections.Generic;
-using Assets.Scripts.Block;
 
 public class BlockIntegrationTest
 {

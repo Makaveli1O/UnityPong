@@ -5,6 +5,7 @@ namespace Assets.Scripts.Blocks
 {
     public class Block : MonoBehaviour
     {
+        [SerializeField] public GameObject shrapnelPrefab;
         public BlockData Data { get; private set; }
         private SpriteRenderer _spriteRenderer;
         private readonly List<IUpdateBehaviour> _updateBehaviours = new();
@@ -35,13 +36,13 @@ namespace Assets.Scripts.Blocks
         private void Update()
         {
             foreach (var behaviour in _updateBehaviours)
-                behaviour.Execute(this);
+                behaviour.OnUpdateExecute(this);
         }
 
-        private void OnCollisionExit2D()
+        private void OnCollisionExit2D(Collision2D other)
         {
             foreach (var behaviour in _collisionBehaviours)
-                behaviour.Execute(this);
+                behaviour.OnCollisionExecute(this, other);
         }
     }
 

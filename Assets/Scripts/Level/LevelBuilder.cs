@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using Assets.Scripts.Block;
 using Assets.Scripts.Blocks;
 using Unity.Mathematics;
-using UnityEngine;
 
 namespace Assets.Scripts.Level
 {

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Assets.Scripts.Block;
 using UnityEngine;
 
 namespace Assets.Scripts.Blocks
@@ -27,13 +26,14 @@ namespace Assets.Scripts.Blocks
             {
                 MonoBehaviour instance = (MonoBehaviour)_go.AddComponent(config.BehaviourType);
 
-                if (instance is IConfigurableBehaviour && config.Parameters != null)
-                    instance = Configure(instance, config);
-                else
-                    throw new System.Exception("Provided config is either not configurable, or parameters for the behaviour are not provided.");
+                if (instance is IConfigurableBehaviour)
+                    if (config.Parameters != null)
+                        instance = Configure(instance, config);
+                    else
+                        throw new System.Exception("Provided parameters for configurable behaviours are invalid.");
 
                 if (instance is IUpdateBehaviour update)
-                    _block.AddUpdateBehaviour(update);
+                        _block.AddUpdateBehaviour(update);
                 if (instance is ICollisionBehaviour collision)
                     _block.AddCollisionBehaviour(collision);
             }

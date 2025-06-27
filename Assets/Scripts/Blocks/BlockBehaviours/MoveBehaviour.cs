@@ -16,7 +16,7 @@ namespace Assets.Scripts.Blocks
             pointB.z = pointA.z;
         }
 
-        public void Execute(Block context)
+        public void OnUpdateExecute(Block context)
         {
             MoveBackAndForth();
         }

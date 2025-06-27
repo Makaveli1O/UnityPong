@@ -1,3 +1,4 @@
+using System;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -61,6 +62,14 @@ namespace Assets.Scripts.SharedKernel
             Vector3 world = cam.ViewportToWorldPoint(new Vector3(targetViewport.x, targetViewport.y, viewPos.z));
             world.z = origin.z;
             return world;
+        }
+
+        public static void ReduceScale(Transform transform, float factor)
+        {
+            if (factor <= 0f || factor >= 1f)
+                throw new ArgumentOutOfRangeException(nameof(factor), "Factor must be between 0 and 1 (exclusive).");
+
+            transform.localScale *= factor;
         }
      
     }

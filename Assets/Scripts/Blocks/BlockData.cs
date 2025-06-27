@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Assets.Scripts.Block;
 using Unity.Mathematics;
 
 namespace Assets.Scripts.Blocks

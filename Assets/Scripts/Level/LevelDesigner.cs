@@ -24,13 +24,91 @@ namespace Assets.Scripts.Level
             return new LevelBuilder()
                 .WithBlock(
                     BlockColour.Blue,
-                    new int2(3,4),
-                    new List<Block.BehaviourConfig>
+                    new int2(0, 4),
+                    new List<BehaviourConfig>
                     {
                         new(
-                            typeof(MoveBehaviour), new Dictionary<string, object>
+                            typeof(ExplodeBehaviour), new Dictionary<string, object>
                                 {
-                                    { "speed", 10f }
+                                    { "shrinkFactor", 0.2f }
+                                }
+                            )
+                    }
+                )
+                .WithBlock(
+                    BlockColour.Blue,
+                    new int2(0, 3),
+                    new List<BehaviourConfig>
+                    {
+                        new(
+                            typeof(ExplodeBehaviour), new Dictionary<string, object>
+                                {
+                                    { "shrinkFactor", 10f }
+                                }
+                            )
+                    }
+                )
+                .WithBlock(
+                    BlockColour.Blue,
+                    new int2(0, 2),
+                    new List<BehaviourConfig>
+                    {
+                        new(
+                            typeof(ExplodeBehaviour), new Dictionary<string, object>
+                                {
+                                    { "shrinkFactor", 10f }
+                                }
+                            )
+                    }
+                )
+                .WithBlock(
+                    BlockColour.Blue,
+                    new int2(0, 1),
+                    new List<BehaviourConfig>
+                    {
+                        new(
+                            typeof(ExplodeBehaviour), new Dictionary<string, object>
+                                {
+                                    { "shrinkFactor", 10f }
+                                }
+                            )
+                    }
+                )
+                .WithBlock(
+                    BlockColour.Blue,
+                    new int2(0, 0),
+                    new List<BehaviourConfig>
+                    {
+                        new(
+                            typeof(ExplodeBehaviour), new Dictionary<string, object>
+                                {
+                                    { "shrinkFactor", 10f }
+                                }
+                            )
+                    }
+                )
+                .WithBlock(
+                    BlockColour.Blue,
+                    new int2(0, -1),
+                    new List<BehaviourConfig>
+                    {
+                        new(
+                            typeof(ExplodeBehaviour), new Dictionary<string, object>
+                                {
+                                    { "shrinkFactor", 10f }
+                                }
+                            )
+                    }
+                )
+                .WithBlock(
+                    BlockColour.Blue,
+                    new int2(0,-2),
+                    new List<BehaviourConfig>
+                    {
+                        new(
+                            typeof(ExplodeBehaviour), new Dictionary<string, object>
+                                {
+                                    { "shrinkFactor", 10f }
                                 }
                             )
                     }

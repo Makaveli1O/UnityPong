@@ -18,10 +18,14 @@ public class BlockIntegrationTest
     private GameObject blockSpawnerObject;
     private BlockSpawner blockSpawner;
     [SerializeField] public GameObject blockPrefab;
+    private Camera _camera;
 
     [SetUp]
     public void SetUp()
     {
+        GameObject camObj = new GameObject("TestCamera");
+        _camera = camObj.AddComponent<Camera>();
+        _camera.tag = "MainCamera";
         // Clear and register services BEFORE creating BlockSpawner
         SimpleServiceLocator.Clear();
 
@@ -50,6 +54,9 @@ public class BlockIntegrationTest
         UnityEngine.Object.Destroy(blockSpawnerObject);
         BlockWinConditionCounter counter = (BlockWinConditionCounter)SimpleServiceLocator.Resolve<IBlockCounter>();
         counter.ResetCounter();
+
+        if (_camera != null)
+            GameObject.DestroyImmediate(_camera.gameObject);
     }
 
     [UnityTest]
@@ -123,7 +130,7 @@ public class BlockIntegrationTest
             blockSpawner.DestroyBlock(block);
         }
 
-        
+
         Assert.IsTrue(blockCounter.IsWinConditionMet());
         yield return null;
     }
@@ -168,43 +175,6 @@ public class BlockIntegrationTest
         Assert.AreEqual(0, remainingBlocks.Length, "Not all blocks were destroyed.");
     }
 
-    private Block SpawnEmptyBlock(int2 position)
-    {
-        return blockSpawner.SpawnBlock(
-            new BlockData(
-                null,
-                BlockColour.Empty,
-                position,
-                new List<BehaviourConfig>()
-            )
-        );
-    }
-
-
-    // Extracts the types of behaviours from the block instance for assertions
-
-    private System.Type[] GetBlockBehavioursTypes(Block block)
-    {
-        var updateTypes = GetBehaviourTypesFromField(block, "_updateBehaviours");
-        var collisionTypes = GetBehaviourTypesFromField(block, "_collisionBehaviours");
-
-        // Combine and return
-        return updateTypes.Concat(collisionTypes).Distinct().ToArray();
-    }
-    
-    private System.Type[] GetBehaviourTypesFromField(Block block, string fieldName)
-    {
-        var bindingFlags = BindingFlags.NonPublic | BindingFlags.Instance;
-
-        var fieldInfo = typeof(Block).GetField(fieldName, bindingFlags);
-        if (fieldInfo == null) return Array.Empty<System.Type>();
-
-        var behaviours = fieldInfo.GetValue(block) as System.Collections.IEnumerable;
-        if (behaviours == null) return Array.Empty<System.Type>();
-
-        return behaviours.Cast<IBlockBehaviour>().Select(b => b.GetType()).ToArray();
-    }
-
     [UnityTest]
     public IEnumerator SpawnBlock_WithConfiguredMoveBehaviour_ShouldWork()
     {
@@ -219,11 +189,11 @@ public class BlockIntegrationTest
         };
 
         var block = blockSpawner.SpawnBlock(new BlockData(null, BlockColour.Blue, new int2(0, 0), config));
-        yield return null;
-
         var move = block.GetComponent<MoveBehaviour>();
+        yield return null;
         Assert.IsNotNull(move);
         Assert.AreEqual(2f, move.speed);
+        yield return null;
     }
 
     [UnityTest]
@@ -240,7 +210,7 @@ public class BlockIntegrationTest
         yield return null;
     }
 
-        [UnityTest]
+    [UnityTest]
     public IEnumerator SpawnBlock_WithConfiguredExplodeBehaviour_ShouldWork()
     {
         yield return null;
@@ -283,6 +253,40 @@ public class BlockIntegrationTest
         CollectionAssert.Contains(update, typeof(MoveBehaviour));
         CollectionAssert.Contains(collision, typeof(ExplodeBehaviour));
         */
+    }
+
+    private Block SpawnEmptyBlock(int2 position)
+    {
+        return blockSpawner.SpawnBlock(
+            new BlockData(
+                null,
+                BlockColour.Empty,
+                position,
+                new List<BehaviourConfig>()
+            )
+        );
+    }
+    
+    private System.Type[] GetBlockBehavioursTypes(Block block)
+    {
+        var updateTypes = GetBehaviourTypesFromField(block, "_updateBehaviours");
+        var collisionTypes = GetBehaviourTypesFromField(block, "_collisionBehaviours");
+
+        // Combine and return
+        return updateTypes.Concat(collisionTypes).Distinct().ToArray();
+    }
+    
+    private System.Type[] GetBehaviourTypesFromField(Block block, string fieldName)
+    {
+        var bindingFlags = BindingFlags.NonPublic | BindingFlags.Instance;
+
+        var fieldInfo = typeof(Block).GetField(fieldName, bindingFlags);
+        if (fieldInfo == null) return Array.Empty<System.Type>();
+
+        var behaviours = fieldInfo.GetValue(block) as System.Collections.IEnumerable;
+        if (behaviours == null) return Array.Empty<System.Type>();
+
+        return behaviours.Cast<IBlockBehaviour>().Select(b => b.GetType()).ToArray();
     }
 
 }

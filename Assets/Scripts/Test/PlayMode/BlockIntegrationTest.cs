@@ -177,17 +177,17 @@ public class BlockIntegrationTest
     [UnityTest]
     public IEnumerator SpawnBlock_WithConfiguredMoveBehaviour_ShouldWork()
     {
-        var config = new List<BehaviourConfig>
-        {
-            new(typeof(MoveBehaviour), new Dictionary<string, object>
-            {
-                { "speed", 2f },
-                { "pointA", new Vector3(0, 0, 0) },
-                { "pointB", new Vector3(5, 0, 0) }
-            })
-        };
+        var behavioursBlueBasic = new BehaviourBuilder()
+            .Add<MoveBehaviour, MoveConfig>(
+                new MoveConfig(
+                    2.0f,
+                    new Vector3(-3f, -3f, 0f),
+                    new Vector3(1f, -3f, 0f)
+                )
+            )
+            .Build();
 
-        var block = blockSpawner.SpawnBlock(new BlockData(null, new int2(0, 0), config));
+        var block = blockSpawner.SpawnBlock(new BlockData(null, new int2(0, 0), behavioursBlueBasic));
         var move = block.GetComponent<MoveBehaviour>();
         yield return null;
         Assert.IsNotNull(move);

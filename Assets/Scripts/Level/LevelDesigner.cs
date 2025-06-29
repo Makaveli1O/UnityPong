@@ -21,7 +21,7 @@ namespace Assets.Scripts.Level
 
         public LevelData GetLevel0()
         {
-            var behaviours = new BehaviourBuilder()
+            var behavioursBlueBasic = new BehaviourBuilder()
                 .Add<MoveBehaviour, MoveConfig>(
                     new MoveConfig(
                         1.0f,
@@ -31,10 +31,33 @@ namespace Assets.Scripts.Level
                 )
                 .Build();
             
+            var behavioursRedBasic = new BehaviourBuilder()
+                .Add<ExplodeBehaviour, ExplodeConfig>(new ExplodeConfig())
+                .Build();
+                
+            var combinedBasicBehaviours = new BehaviourBuilder()
+                .Add<MoveBehaviour, MoveConfig>(
+                    new MoveConfig(
+                        10.0f,
+                        new Vector3(3f, 3f, 0f),
+                        new Vector3(1f, 3f, 0f)
+                    )
+                )
+                .Add<ExplodeBehaviour, ExplodeConfig>(new ExplodeConfig())
+                .Build();
+
             return new LevelBuilder()
                 .WithBlock(
                     new int2(3, 4),
-                    behaviours
+                    behavioursBlueBasic
+                )
+                .WithBlock(
+                    new int2(-3, -4),
+                    behavioursRedBasic
+                )
+                .WithBlock(
+                    new int2(-1,-1),
+                    combinedBasicBehaviours
                 )
                 .Build();
         }

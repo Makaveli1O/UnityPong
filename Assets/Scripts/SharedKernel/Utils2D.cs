@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -16,34 +18,76 @@ namespace Assets.Scripts.SharedKernel
             {
                 return new int2((int)value.x, (int)value.y);
             }
-        }   
+        }
 
-        public static Vector3 GetRandomVisiblePoint(Vector3 origin, float minRange, float maxRange)
+        public static Color BlendColours(List<Color> colours)
+        {
+            if (colours.Count == 0)
+                return Color.gray;
+
+            float r = 0f, g = 0f, b = 0f;
+            foreach (var c in colours)
+            {
+                r += c.r;
+                g += c.g;
+                b += c.b;
+            }
+
+            return new Color(r / colours.Count, g / colours.Count, b / colours.Count);
+        }
+
+        /// <summary>
+        /// Returns a random point inside the visible camera viewport in world space.
+        /// </summary>
+        /// <param name="camera">Camera to use, defaults to main camera if null.</param>
+        public static Vector3 GetRandomVisiblePoint(Camera camera = null)
+        {
+            if (camera == null) camera = Camera.main;
+
+            // Random point in viewport (x,y between 0 and 1)
+            float x = UnityEngine.Random.Range(0f, 1f);
+            float y = UnityEngine.Random.Range(0f, 1f);
+
+            Vector3 viewportPoint = new Vector3(x, y, camera.nearClipPlane);
+
+            // Convert viewport to world point
+            Vector3 worldPoint = camera.ViewportToWorldPoint(viewportPoint);
+
+            // Set z = 0 for 2D world space
+            worldPoint.z = 0f;
+
+            return worldPoint;
+        }
+
+        public static Vector3 GetAxisAlignedVisiblePoint(Vector3 origin)
         {
             Camera cam = Camera.main;
-            if (cam == null) return origin;
+            Vector3 viewPos = cam.WorldToViewportPoint(origin);
+            Vector3 targetViewport = viewPos;
 
-            Vector3 screenPos = cam.WorldToViewportPoint(origin);
+            if (UnityEngine.Random.value < 0.5f)
+            {
+                // Horizontal movement
+                targetViewport.x = UnityEngine.Random.Range(0.1f, 0.9f);
+            }
+            else
+            {
+                // Vertical movement
+                targetViewport.y = UnityEngine.Random.Range(0.1f, 0.9f);
+            }
 
-            float maxOffsetX = Mathf.Min(maxRange, 1f - screenPos.x);
-            float minOffsetX = Mathf.Min(maxRange, screenPos.x);
-            float maxOffsetY = Mathf.Min(maxRange, 1f - screenPos.y);
-            float minOffsetY = Mathf.Min(maxRange, screenPos.y);
-
-            float offsetX = UnityEngine.Random.Range(minRange, Mathf.Min(maxRange, maxOffsetX + minOffsetX));
-            float offsetY = UnityEngine.Random.Range(minRange, Mathf.Min(maxRange, maxOffsetY + minOffsetY));
-
-            offsetX *= UnityEngine.Random.value > 0.5f ? 1 : -1;
-            offsetY *= UnityEngine.Random.value > 0.5f ? 1 : -1;
-
-            Vector3 target = origin + new Vector3(offsetX, offsetY, 0);
-
-            // Clamp to viewport to make sure it's visible
-            Vector3 viewportTarget = cam.WorldToViewportPoint(target);
-            viewportTarget.x = Mathf.Clamp(viewportTarget.x, 0.05f, 0.95f);
-            viewportTarget.y = Mathf.Clamp(viewportTarget.y, 0.05f, 0.95f);
-
-            return cam.ViewportToWorldPoint(viewportTarget);
+            Vector3 world = cam.ViewportToWorldPoint(new Vector3(targetViewport.x, targetViewport.y, viewPos.z));
+            world.z = origin.z;
+            return world;
         }
+
+        public static void ReduceScale(Transform transform, float factor)
+        {
+            if (factor <= 0f || factor >= 1f)
+                throw new ArgumentOutOfRangeException(nameof(factor), "Factor must be between 0 and 1 (exclusive).");
+
+            transform.localScale *= factor;
+        }
+     
     }
 }

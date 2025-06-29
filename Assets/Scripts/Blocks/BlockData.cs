@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Mathematics;
 
 namespace Assets.Scripts.Blocks
@@ -13,14 +14,14 @@ namespace Assets.Scripts.Blocks
     public record BlockData
     {
         public BlockShape Shape { get; }
-        public BlockColour Colour { get; }
         public int2 Position { get; set; }
+        public List<BehaviourConfig> Behaviours { get; set; }
 
-        public BlockData(BlockShape shape, BlockColour colour, int2 position)
+        public BlockData(BlockShape shape, int2 position, List<BehaviourConfig> behaviours)
         {
             Shape = shape;
-            Colour = colour;
             Position = position;
+            Behaviours = behaviours;
         }
     }
 }

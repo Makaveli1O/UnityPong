@@ -6,8 +6,8 @@ namespace DefaultNamespace
 {
     public class Ball : MonoBehaviour
     {
-        private float initialSpeed = 200f;
-        private float maxSpeed = 1000f;
+        private float initialSpeed = 300f;
+        private float maxSpeed = 1500f;
         private float speedIncreaseFactor = 1.5f;
 
         private Rigidbody2D _rb;

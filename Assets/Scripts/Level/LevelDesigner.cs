@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Assets.Scripts.Blocks;
 using Unity.Mathematics;
 using UnityEngine;
@@ -20,10 +21,44 @@ namespace Assets.Scripts.Level
 
         public LevelData GetLevel0()
         {
+            var behavioursBlueBasic = new BehaviourBuilder()
+                .Add<MoveBehaviour, MoveConfig>(
+                    new MoveConfig(
+                        1.0f,
+                        new Vector3(-3f, -3f, 0f),
+                        new Vector3(1f, -3f, 0f)
+                    )
+                )
+                .Build();
+            
+            var behavioursRedBasic = new BehaviourBuilder()
+                .Add<ExplodeBehaviour, ExplodeConfig>(new ExplodeConfig())
+                .Build();
+                
+            var combinedBasicBehaviours = new BehaviourBuilder()
+                .Add<MoveBehaviour, MoveConfig>(
+                    new MoveConfig(
+                        10.0f,
+                        new Vector3(3f, 3f, 0f),
+                        new Vector3(1f, 3f, 0f)
+                    )
+                )
+                .Add<ExplodeBehaviour, ExplodeConfig>(new ExplodeConfig())
+                .Build();
+
             return new LevelBuilder()
-                .WithBlock(BlockColour.Red, 3, 5)
-                .WithBlock(BlockColour.Blue, 4, 5)
-                .WithCheckerboard(5, 2) // rows x columns
+                .WithBlock(
+                    new int2(3, 4),
+                    behavioursBlueBasic
+                )
+                .WithBlock(
+                    new int2(-3, -4),
+                    behavioursRedBasic
+                )
+                .WithBlock(
+                    new int2(-1,-1),
+                    combinedBasicBehaviours
+                )
                 .Build();
         }
 

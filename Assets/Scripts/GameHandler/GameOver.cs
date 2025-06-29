@@ -14,7 +14,8 @@ namespace Assets.Scripts.GameHandler{
         
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            _sceneLoader.LoadScene(_sceneName);
+            if (collision.gameObject.CompareTag("Ball"))
+                _sceneLoader.LoadScene(_sceneName);
         }
     }
 }

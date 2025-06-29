@@ -191,7 +191,7 @@ public class BlockIntegrationTest
         var move = block.GetComponent<MoveBehaviour>();
         yield return null;
         Assert.IsNotNull(move);
-        Assert.AreEqual(2f, move.speed);
+        Assert.AreEqual(2f, move.Speed);
         yield return null;
     }
 

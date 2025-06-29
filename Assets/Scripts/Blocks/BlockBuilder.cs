@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,15 +23,10 @@ namespace Assets.Scripts.Blocks
 
         public BlockBuilder AddBehaviours(List<BehaviourConfig> behaviourConfigs)
         {
-            foreach (BehaviourConfig config in behaviourConfigs)
+            foreach (var config in behaviourConfigs)
             {
-                MonoBehaviour instance = (MonoBehaviour)_go.AddComponent(config.BehaviourType);
-
-                if (instance is IConfigurableBehaviour)
-                    if (config.Parameters != null)
-                        instance = Configure(instance, config);
-                    else
-                        throw new System.Exception("Provided parameters for configurable behaviours are invalid.");
+                var instance = (MonoBehaviour)_go.AddComponent(config.BehaviourType);
+                ApplyConfig(instance, config.Config);
 
                 if (instance is IUpdateBehaviour update)
                     _block.AddUpdateBehaviour(update);
@@ -52,27 +48,16 @@ namespace Assets.Scripts.Blocks
             return _block;
         }
 
-        // Configre the configurable behaviour of the block
-        private MonoBehaviour Configure(MonoBehaviour instance, BehaviourConfig config)
+        private void ApplyConfig(MonoBehaviour instance, object config)
         {
-            foreach (var param in config.Parameters)
-            {
-                var field = config.BehaviourType.GetField(param.Key);
-                if (field != null)
-                {
-                    field.SetValue(instance, param.Value);
-                    continue;
-                }
+            var configType = config.GetType();
+            var iface = typeof(IConfigurableBehaviour<>).MakeGenericType(configType);
 
-                var prop = config.BehaviourType.GetProperty(param.Key);
-                if (prop != null && prop.CanWrite)
-                {
-                    prop.SetValue(instance, param.Value);
-                }
-            }
-
-            return instance;
+            if (!iface.IsAssignableFrom(instance.GetType()))
+                throw new Exception($"{instance.GetType().Name} does not implement IConfigurable<{configType.Name}>");
+            
+            var method = iface.GetMethod("Configure");
+            method?.Invoke(instance, new[] { config });
         }
     }
-
 }

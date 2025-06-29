@@ -2,9 +2,15 @@ using System;
 
 namespace Assets.Scripts.Blocks
 {
-    public record BehaviourConfig(Type BehaviourType, System.Collections.Generic.Dictionary<string, object> Parameters)
+    public record BehaviourConfig
     {
-        public Type BehaviourType { get; set; } = BehaviourType;
-        public System.Collections.Generic.Dictionary<string, object> Parameters { get; set; } = Parameters;
+        public Type BehaviourType { get; set; }
+        public object Config { get; }
+
+        public BehaviourConfig(Type behaviourType, object config)
+        {
+            BehaviourType = behaviourType;
+            Config = config;
+        }
     }
 }

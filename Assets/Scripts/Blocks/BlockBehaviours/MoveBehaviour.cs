@@ -2,34 +2,33 @@ using Assets.Scripts.SharedKernel;
 using UnityEngine;
 namespace Assets.Scripts.Blocks
 {
-    public class MoveBehaviour : MonoBehaviour, IUpdateBehaviour, IConfigurableBehaviour
+    public class MoveBehaviour : MonoBehaviour, IUpdateBehaviour, IConfigurableBehaviour<MoveConfig>
     {
-        public float speed = 0.5f;
-        public Vector3 endMovementPoint = Vector3.zero;
-        private Vector3 _initialPosition;
-        private bool _initialized = false;
+        public float Speed = 0.5f;
+        public Vector3 EndPoint = Vector3.zero;
+        public Vector3 StartPoint = Vector3.zero;
         private float time;
 
         public void OnUpdateExecute(Block context)
         {
-            if (!_initialized) Initialize(context);
             MoveBackAndForth();
         }
 
         private void MoveBackAndForth()
         {
-            time += Time.deltaTime * speed;
+            time += Time.deltaTime * Speed;
             float t = Mathf.PingPong(time, 1f);
-            transform.position = Vector3.Lerp(_initialPosition, endMovementPoint, t);
+            transform.position = Vector3.Lerp(StartPoint, EndPoint, t);
         }
 
-        private void Initialize(Block context)
+        public void Configure(MoveConfig config)
         {
-            _initialPosition = new Vector3(context.Data.Position.x, context.Data.Position.y);
-            if (endMovementPoint.Equals(Vector3.zero))
-                endMovementPoint = Utils2D.GetAxisAlignedVisiblePoint(_initialPosition);
+            Speed = config.Speed;
+            StartPoint = config.StartPoint;
+            EndPoint = config.EndPoint;
 
-            _initialized = true;
+            if (EndPoint.Equals(Vector3.zero))
+                EndPoint = Utils2D.GetAxisAlignedVisiblePoint(StartPoint);
         }
     }
 }

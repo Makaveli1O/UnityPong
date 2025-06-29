@@ -8,11 +8,9 @@ namespace Assets.Scripts.Blocks
     {
         private readonly List<BehaviourConfig> _configs = new();
         
-        public BehaviourBuilder Add<TBehaviour>(Action<Dictionary<string, object>> argsBuilder = null)
+        public BehaviourBuilder Add<TBehaviour, TConfig>(TConfig config)
         {
-            var args = new Dictionary<string, object>();
-            argsBuilder?.Invoke(args);
-            _configs.Add(new BehaviourConfig(typeof(TBehaviour), args));
+            _configs.Add(new BehaviourConfig(typeof(TBehaviour), config!));
             return this;
         }
 

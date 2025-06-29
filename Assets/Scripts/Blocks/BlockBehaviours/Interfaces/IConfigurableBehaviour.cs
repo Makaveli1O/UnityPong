@@ -1,4 +1,7 @@
 namespace Assets.Scripts.Blocks
 {
-    public interface IConfigurableBehaviour{}
+    public interface IConfigurableBehaviour<TConfig>
+    {
+        void Configure(TConfig config);
+    }
 }

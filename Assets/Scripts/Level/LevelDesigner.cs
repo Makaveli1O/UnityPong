@@ -22,16 +22,10 @@ namespace Assets.Scripts.Level
         public LevelData GetLevel0()
         {
             var behaviours = new BehaviourBuilder()
-                .Add<MoveBehaviour>(args => args["speed"] = 10f)
+                .Add<MoveBehaviour, MoveConfig>(new MoveConfig(1.0f, new Vector3(-3f,-3f,0f), new Vector3(1f,-3f,0f)))
                 .Build();
             
-            // TODO FIX CREATION OF BEHAVIOUR IN A BETTER WAY
             return new LevelBuilder()
-                .WithBlock(
-                    BlockColour.Red,
-                    new int2(2, 2),
-                    new List<BehaviourConfig> { new(typeof(ExplodeBehaviour), new Dictionary<string, object> { }) }
-                )
                 .WithBlock(
                     BlockColour.Blue,
                     new int2(3, 4),

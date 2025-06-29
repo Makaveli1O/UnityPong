@@ -7,10 +7,10 @@ namespace Assets.Scripts.Blocks
 {
     public class BlockColourResolver
     {
-        private static readonly Dictionary<Type, BlockColour> _behaviourColours = new()
+        private static readonly Dictionary<Type, Color> _behaviourColours = new()
         {
-            [typeof(MoveBehaviour)] = BlockColour.Blue,
-            [typeof(ExplodeBehaviour)] = BlockColour.Red,
+            [typeof(MoveBehaviour)] = Color.blue,
+            [typeof(ExplodeBehaviour)] = Color.red,
         };
         public static Color Resolve(List<BehaviourConfig> behaviours)
         {
@@ -19,7 +19,7 @@ namespace Assets.Scripts.Blocks
             foreach (var behaviour in behaviours)
             {
                 if (_behaviourColours.TryGetValue(behaviour.BehaviourType, out var blockColour))
-                    colours.Add(BlockColourPalette.GetColor(blockColour));
+                    colours.Add(blockColour);
             }
 
             return Utils2D.BlendColours(colours);

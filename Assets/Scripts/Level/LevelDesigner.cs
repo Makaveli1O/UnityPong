@@ -21,6 +21,10 @@ namespace Assets.Scripts.Level
 
         public LevelData GetLevel0()
         {
+            var behaviours = new BehaviourBuilder()
+                .Add<MoveBehaviour>(args => args["speed"] = 10f)
+                .Build();
+            
             // TODO FIX CREATION OF BEHAVIOUR IN A BETTER WAY
             return new LevelBuilder()
                 .WithBlock(
@@ -31,7 +35,7 @@ namespace Assets.Scripts.Level
                 .WithBlock(
                     BlockColour.Blue,
                     new int2(3, 4),
-                    new List<BehaviourConfig> { new(typeof(MoveBehaviour), new Dictionary<string, object> { }) }
+                    behaviours
                 )
                 .Build();
         }

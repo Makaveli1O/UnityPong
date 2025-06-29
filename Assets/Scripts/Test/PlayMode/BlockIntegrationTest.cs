@@ -187,7 +187,7 @@ public class BlockIntegrationTest
             })
         };
 
-        var block = blockSpawner.SpawnBlock(new BlockData(null, BlockColour.Blue, new int2(0, 0), config));
+        var block = blockSpawner.SpawnBlock(new BlockData(null, new int2(0, 0), config));
         var move = block.GetComponent<MoveBehaviour>();
         yield return null;
         Assert.IsNotNull(move);
@@ -245,33 +245,10 @@ public class BlockIntegrationTest
         return blockSpawner.SpawnBlock(
             new BlockData(
                 null,
-                BlockColour.Empty,
                 position,
                 new List<BehaviourConfig>()
             )
         );
-    }
-    
-    private System.Type[] GetBlockBehavioursTypes(Block block)
-    {
-        var updateTypes = GetBehaviourTypesFromField(block, "_updateBehaviours");
-        var collisionTypes = GetBehaviourTypesFromField(block, "_collisionBehaviours");
-
-        // Combine and return
-        return updateTypes.Concat(collisionTypes).Distinct().ToArray();
-    }
-    
-    private System.Type[] GetBehaviourTypesFromField(Block block, string fieldName)
-    {
-        var bindingFlags = BindingFlags.NonPublic | BindingFlags.Instance;
-
-        var fieldInfo = typeof(Block).GetField(fieldName, bindingFlags);
-        if (fieldInfo == null) return Array.Empty<System.Type>();
-
-        var behaviours = fieldInfo.GetValue(block) as System.Collections.IEnumerable;
-        if (behaviours == null) return Array.Empty<System.Type>();
-
-        return behaviours.Cast<IBlockBehaviour>().Select(b => b.GetType()).ToArray();
     }
 
 }

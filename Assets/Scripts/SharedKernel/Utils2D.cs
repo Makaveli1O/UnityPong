@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -17,6 +18,22 @@ namespace Assets.Scripts.SharedKernel
             {
                 return new int2((int)value.x, (int)value.y);
             }
+        }
+
+        public static Color BlendColours(List<Color> colours)
+        {
+            if (colours.Count == 0)
+                return Color.gray;
+
+            float r = 0f, g = 0f, b = 0f;
+            foreach (var c in colours)
+            {
+                r += c.r;
+                g += c.g;
+                b += c.b;
+            }
+
+            return new Color(r / colours.Count, g / colours.Count, b / colours.Count);
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 using System;
 using Assets.Scripts.SharedKernel;
+using PlasticPipe.PlasticProtocol.Messages;
 using UnityEngine;
 
 namespace Assets.Scripts.Blocks
@@ -22,9 +23,8 @@ namespace Assets.Scripts.Blocks
             Block block = new BlockBuilder(go)
                 .AddBehaviours(data.Behaviours)
                 .WithData(data)
-                .WithColour(BlockColourMapper.ToColour(data.Colour))
+                .WithColour(BlockColourResolver.Resolve(data.Behaviours))
                 .Build();
-                
 
             return block;
         }

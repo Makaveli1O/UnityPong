@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 namespace Assets.Scripts.Blocks
 {
-    public class ExplodeBehaviour : MonoBehaviour, ICollisionBehaviour, IConfigurableBehaviour<ExplodeConfig>
+    public class ExplodeBehaviour : MonoBehaviour, ICollisionBehaviour
     {
         private const int _shrapnelCount = 5;
         private const int _delaySeconds = 2;
@@ -54,11 +54,6 @@ namespace Assets.Scripts.Blocks
             }
 
             Destroy(ctx.gameObject);
-        }
-
-        public void Configure(ExplodeConfig config)
-        {
-            return;
         }
     }
 }

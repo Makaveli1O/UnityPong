@@ -196,48 +196,53 @@ public class BlockIntegrationTest
     }
 
     [UnityTest]
-    public IEnumerator SpawnBlock_WithConfiguredExplodeBehaviour_ShouldWork()
+    public IEnumerator MoveBehaviour_ConfiguresSpeedCorrectly()
     {
-        yield return null;
-        //TODO when explode behaviour is implemented
-        /*
-        var config = new List<BehaviourConfig>
-        {
-            new(typeof(ExplodeBehaviour), new Dictionary<string, object>())
-        };
+        var go = new GameObject();
+        var move = go.AddComponent<MoveBehaviour>();
 
-        var block = blockSpawner.SpawnBlock(new BlockData(null, BlockColour.Red, new int2(0, 0), config));
-        yield return null;
+        move.Configure(new MoveConfig(3.5f, Vector3.zero, Vector3.zero));
 
-        var types = GetBehaviourTypesFromField(block, collisionBehavioursField);
-        CollectionAssert.Contains(types, typeof(ExplodeBehaviour));
-        */
+        Assert.AreEqual(3.5f, move.Speed); // Assuming Speed is exposed for test
+
+        yield return null;
     }
 
     [UnityTest]
-    public IEnumerator SpawnBlock_WithMultipleBehaviours_ShouldContainAll()
+    public IEnumerator BlockColourResolver_BlendsMoveAndExplodeColours()
     {
-        yield return null;
-        /*
-        var config = new List<BehaviourConfig>
+        var configs = new List<BehaviourConfig>
         {
-            new(typeof(ExplodeBehaviour), new Dictionary<string, object>()),
-            new(typeof(MoveBehaviour), new Dictionary<string, object>
-            {
-                { "speed", 1.5f },
-                { "pointA", new Vector3(0, 0, 0) },
-                { "pointB", new Vector3(2, 0, 0) }
-            })
+            new(typeof(MoveBehaviour), new MoveConfig(1f, Vector3.zero, Vector3.zero)),
+            new(typeof(ExplodeBehaviour), new ExplodeConfig())
         };
 
-        var block = blockSpawner.SpawnBlock(new BlockData(null, BlockColour.Purple, new int2(0, 0), config));
-        yield return null;
+        var color = BlockColourResolver.Resolve(configs);
 
-        var update = GetBehaviourTypesFromField(block, updateBehavioursField);
-        var collision = GetBehaviourTypesFromField(block, collisionBehavioursField);
-        CollectionAssert.Contains(update, typeof(MoveBehaviour));
-        CollectionAssert.Contains(collision, typeof(ExplodeBehaviour));
-        */
+        // Expecting purple = mix of blue + red = (0.5, 0, 0.5)
+        Assert.AreEqual(new Color(0.5f, 0f, 0.5f), color);
+
+        yield return null;
+    }
+
+    [UnityTest]
+    public IEnumerator BlockBuilder_CreatesBlockWithConfiguredBehaviour()
+    {
+        var go = new GameObject();
+        go.AddComponent<Block>();
+
+        var builder = new BlockBuilder(go);
+        var config = new BehaviourBuilder()
+            .Add<MoveBehaviour, MoveConfig>(new MoveConfig(4f, Vector3.zero, Vector3.zero))
+            .Build();
+
+        builder.AddBehaviours(config);
+
+        var move = go.GetComponent<MoveBehaviour>();
+        Assert.IsNotNull(move);
+        Assert.AreEqual(4f, move.Speed);
+
+        yield return null;
     }
 
     private Block SpawnEmptyBlock(int2 position)

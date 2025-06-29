@@ -26,7 +26,9 @@ namespace Assets.Scripts.Blocks
             foreach (var config in behaviourConfigs)
             {
                 var instance = (MonoBehaviour)_go.AddComponent(config.BehaviourType);
-                ApplyConfig(instance, config.Config);
+
+                if (config.Config is not NoConfig)
+                    ApplyConfig(instance, config.Config);
 
                 if (instance is IUpdateBehaviour update)
                     _block.AddUpdateBehaviour(update);

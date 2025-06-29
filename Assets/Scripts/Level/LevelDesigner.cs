@@ -30,9 +30,9 @@ namespace Assets.Scripts.Level
                     )
                 )
                 .Build();
-            
+
             var behavioursRedBasic = new BehaviourBuilder()
-                .Add<ExplodeBehaviour, ExplodeConfig>(new ExplodeConfig())
+                .AddNonConfigurable<ExplodeBehaviour>()
                 .Build();
                 
             var combinedBasicBehaviours = new BehaviourBuilder()
@@ -43,7 +43,7 @@ namespace Assets.Scripts.Level
                         new Vector3(1f, 3f, 0f)
                     )
                 )
-                .Add<ExplodeBehaviour, ExplodeConfig>(new ExplodeConfig())
+                .AddNonConfigurable<ExplodeBehaviour>()
                 .Build();
 
             return new LevelBuilder()

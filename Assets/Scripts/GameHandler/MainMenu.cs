@@ -5,8 +5,8 @@ namespace Assets.Scripts.GameHandler
 {
     public class MainMenu : MonoBehaviour
     {
-        private const string _level0Scene = "Level0";
         private ISceneLoader _sceneLoader;
+        private string GetInitialSceneName => SceneNames.Level0;
 
         void Awake()
         {
@@ -15,7 +15,7 @@ namespace Assets.Scripts.GameHandler
 
         public void PlayGame()
         {
-            _sceneLoader.LoadScene(_level0Scene);
+            _sceneLoader.LoadScene(GetInitialSceneName);
         }
     }
 

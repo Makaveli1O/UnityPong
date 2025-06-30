@@ -6,8 +6,8 @@ namespace Assets.Scripts.GameHandler
 {
     public class GameHandler : MonoBehaviour
     {
-        private string _winScene = "WinScene";
-        private string _gameOverScene = "GameOverScene";
+        private string _winScene => SceneNames.Win;
+        private string _gameOverScene => SceneNames.GameOver;
         private IGameWinCondition _winCondition;
         private GameState _currentState;
         private ISceneLoader _sceneLoader;

@@ -73,7 +73,7 @@ public class LevelBounds : MonoBehaviour
         {
             case WallScreenPosition.Left:
                 wall = new GameObject("LeftWall");
-                wall.AddComponent<GameOver>();
+                wall.AddComponent<GameOverTrigger>();
                 break;
             case WallScreenPosition.Right:
                 wall = new GameObject("RightWall");

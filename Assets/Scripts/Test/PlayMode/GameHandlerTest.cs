@@ -49,7 +49,7 @@ public class GameHandlerTest
         yield return null; // allow Update()
 
         Assert.AreEqual(GameState.Win, GetCurrentState(_gameHandler));
-        Assert.AreEqual("WinScene", _sceneLoader.LastLoadedScene);
+        Assert.AreEqual(SceneNames.Win, _sceneLoader.LastLoadedScene);
     }
 
     [UnityTest]
@@ -66,7 +66,7 @@ public class GameHandlerTest
         _gameHandler.SetState(GameState.GameOver);
         yield return null;
 
-        Assert.AreEqual("GameOverScene", _sceneLoader.LastLoadedScene);
+        Assert.AreEqual(SceneNames.GameOver, _sceneLoader.LastLoadedScene);
         Assert.AreEqual(GameState.GameOver, GetCurrentState(_gameHandler));
     }
 

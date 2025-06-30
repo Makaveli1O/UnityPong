@@ -1,3 +1,5 @@
+using Assets.Scripts.SharedKernel;
+using Assets.Scripts.Sound;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using Vector2 = UnityEngine.Vector2;
@@ -6,15 +8,18 @@ namespace DefaultNamespace
 {
     public class Ball : MonoBehaviour
     {
+        [SerializeField] private AudioClip _launchBallClip;
         private float initialSpeed = 300f;
         private float maxSpeed = 1500f;
         private float speedIncreaseFactor = 1.5f;
+        private ISoundPlayer _soundPlayer;
 
         private Rigidbody2D _rb;
 
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
+            _soundPlayer = SimpleServiceLocator.Resolve<ISoundPlayer>();
         }
 
         private void Start()
@@ -32,6 +37,7 @@ namespace DefaultNamespace
             // Set initial velocity
             Vector2 direction = new Vector2(x, y).normalized;
             _rb.AddForce(direction * initialSpeed);
+            _soundPlayer.PlaySfx(_launchBallClip);
         }
 
         public void OnCollisionEnter2D(Collision2D collision)

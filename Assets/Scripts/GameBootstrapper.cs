@@ -12,7 +12,7 @@ public class GameBootstrapper : MonoBehaviour
     private BlockWinConditionCounter _blockCounter;
     private SceneLoader _sceneLoader;
     private LevelDesigner _levelDesigner;
-    private SoundPlayer _soundPlayer;
+    [SerializeField] private SoundPlayer _soundPlayer;
 
     void Awake()
     {
@@ -20,7 +20,8 @@ public class GameBootstrapper : MonoBehaviour
         _blockCounter = new BlockWinConditionCounter();
         _sceneLoader = GetComponent<SceneLoader>();
         _levelDesigner = GetComponent<LevelDesigner>();
-        _soundPlayer = GetComponent<SoundPlayer>();
+
+        if (_soundPlayer == null) throw new System.Exception("SoundPlayer is not assigned in the inspector.");
 
         RegisterServices();
     }

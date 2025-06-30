@@ -4,7 +4,7 @@ namespace Assets.Scripts.Sound
 {
     public class SoundPlayer : MonoBehaviour, ISoundPlayer
     {
-        [SerializeField] private AudioSource _sfxSource;
+        [SerializeField] private AudioSource _sfxSource ;
         [SerializeField] private AudioSource _musicSource;
 
         public void PlaySfx(AudioClip clip)

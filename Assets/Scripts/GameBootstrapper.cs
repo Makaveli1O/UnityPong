@@ -10,7 +10,7 @@ public class GameBootstrapper : MonoBehaviour
 {
     private BlockFactory _blockFactory;
     private BlockWinConditionCounter _blockCounter;
-    private ISceneLoader _sceneLoader;
+    private SceneLoader _sceneLoader;
     private LevelDesigner _levelDesigner;
     [SerializeField] GameObject _levelDesignerPrefab;
 
@@ -26,7 +26,8 @@ public class GameBootstrapper : MonoBehaviour
 
     void Start()
     {
-        InitializeLevelDesigner();
+        if (_sceneLoader.GetCurrentSceneName.Equals(SceneNames.Level0))
+            InitializeLevelDesigner();
     }
 
     private void InitializeLevelDesigner()

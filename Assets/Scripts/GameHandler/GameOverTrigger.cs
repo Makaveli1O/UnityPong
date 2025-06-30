@@ -2,9 +2,9 @@ using UnityEngine;
 using Assets.Scripts.SharedKernel;
 
 namespace Assets.Scripts.GameHandler{
-    public class GameOver : MonoBehaviour
+    public class GameOverTrigger : MonoBehaviour
     {
-        private const string _sceneName = "GameOver";
+        private string GetSceneName => SceneNames.GameOver;
         private ISceneLoader _sceneLoader;
 
         void Awake()
@@ -15,7 +15,7 @@ namespace Assets.Scripts.GameHandler{
         private void OnCollisionEnter2D(Collision2D collision)
         {
             if (collision.gameObject.CompareTag("Ball"))
-                _sceneLoader.LoadScene(_sceneName);
+                _sceneLoader.LoadScene(GetSceneName);
         }
     }
 }

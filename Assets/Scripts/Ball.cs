@@ -1,5 +1,5 @@
 using Assets.Scripts.SharedKernel;
-using Assets.Scripts.Sound;
+using Assets.Scripts.SharedKernel;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using Vector2 = UnityEngine.Vector2;
@@ -9,6 +9,7 @@ namespace DefaultNamespace
     public class Ball : MonoBehaviour
     {
         [SerializeField] private AudioClip _launchBallClip;
+        [SerializeField] private AudioClip _ballHit;
         private float initialSpeed = 300f;
         private float maxSpeed = 1500f;
         private float speedIncreaseFactor = 1.5f;
@@ -51,6 +52,8 @@ namespace DefaultNamespace
                 }
                 _rb.AddForce(collision.relativeVelocity.normalized * speedIncreaseFactor);
             }
+
+            _soundPlayer.PlaySfx(_ballHit);
         }
     }
 }

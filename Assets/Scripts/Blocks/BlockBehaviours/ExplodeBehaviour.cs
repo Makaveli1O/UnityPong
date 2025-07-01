@@ -1,12 +1,24 @@
 using System.Collections;
+using Assets.Scripts.SharedKernel;
+using Assets.Scripts.SharedKernel;
 using UnityEngine;
 namespace Assets.Scripts.Blocks
 {
     public class ExplodeBehaviour : MonoBehaviour, ICollisionBehaviour
     {
+        private AudioClip _explodeClip;
+        private AudioClip _blip;
         private const int _shrapnelCount = 5;
         private const int _delaySeconds = 2;
         private float _spreadForce = 5f;
+        private ISoundPlayer _soundPlayer;
+
+        void Awake()
+        {
+            _soundPlayer = SimpleServiceLocator.Resolve<ISoundPlayer>();
+            _explodeClip = Resources.Load<AudioClip>("Sound/Block/explosion");
+            _blip = Resources.Load<AudioClip>("Sound/Block/blip");
+        }
 
         public void OnCollisionExecute(Block context, Collision2D collision)
         {
@@ -32,6 +44,7 @@ namespace Assets.Scripts.Blocks
                 sr.color = originalColor;
                 yield return new WaitForSeconds(0.1f);
                 elapsed += 0.2f;
+                _soundPlayer.PlaySfx(_blip);
             }
             ExecuteExplosion(ctx);
         }
@@ -54,6 +67,7 @@ namespace Assets.Scripts.Blocks
             }
 
             Destroy(ctx.gameObject);
+            _soundPlayer.PlaySfx(_explodeClip);
         }
     }
 }

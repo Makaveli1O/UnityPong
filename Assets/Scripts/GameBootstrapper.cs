@@ -3,7 +3,7 @@ using Assets.Scripts.SharedKernel;
 using Assets.Scripts.Blocks;
 using Assets.Scripts.GameHandler;
 using Assets.Scripts.Level;
-using Assets.Scripts.Sound;
+using Assets.Scripts.SharedKernel;
 
 
 public class GameBootstrapper : MonoBehaviour
@@ -21,7 +21,6 @@ public class GameBootstrapper : MonoBehaviour
         _sceneLoader = GetComponent<SceneLoader>();
         _levelDesigner = GetComponent<LevelDesigner>();
 
-        if (_soundPlayer == null) throw new System.Exception("SoundPlayer is not assigned in the inspector.");
 
         RegisterServices();
     }

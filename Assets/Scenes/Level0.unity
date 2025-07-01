@@ -295,6 +295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _launchBallClip: {fileID: 8300000, guid: 15f57451abfd50c4cb0276e1446a5601, type: 3}
+  _ballHit: {fileID: 8300000, guid: 4988d5d1b2168b94b9cbbf983a2d52cb, type: 3}
 --- !u!1 &947324420
 GameObject:
   m_ObjectHideFlags: 0
@@ -445,10 +446,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6807a9e8f2fa6e6488792fff157787f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &951543135 stripped
+--- !u!114 &1207432501 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: -1377738759042821329, guid: 9ae7e97f59ce8c34ca27e7273d58981f, type: 3}
-  m_PrefabInstance: {fileID: 5088807124476392081}
+  m_PrefabInstance: {fileID: 1954004647}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -570,7 +571,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e92cf70cc21182f4bbfd9337fede69f7, type: 3}
---- !u!1001 &5088807124476392081
+--- !u!1001 &1954004647
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -735,7 +736,7 @@ PrefabInstance:
     - target: {fileID: 1907891766711076153, guid: 31f0674b3fea33d4a82644cc536addcb, type: 3}
       propertyPath: _soundPlayer
       value: 
-      objectReference: {fileID: 951543135}
+      objectReference: {fileID: 1207432501}
     - target: {fileID: 1907891766711076153, guid: 31f0674b3fea33d4a82644cc536addcb, type: 3}
       propertyPath: _levelDesignerPrefab
       value: 
@@ -759,4 +760,4 @@ SceneRoots:
   - {fileID: 947324423}
   - {fileID: 516118933}
   - {fileID: 1368161340}
-  - {fileID: 5088807124476392081}
+  - {fileID: 1954004647}

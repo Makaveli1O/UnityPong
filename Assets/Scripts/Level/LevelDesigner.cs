@@ -1,4 +1,5 @@
 using Assets.Scripts.Blocks;
+using Assets.Scripts.GameHandler;
 using Assets.Scripts.SharedKernel;
 using Unity.Mathematics;
 using UnityEngine;
@@ -10,17 +11,19 @@ namespace Assets.Scripts.Level
         private BlockSpawner _spawner;
         private ISoundPlayer _soundPlayer;
         public AudioClip GetSceneMusicTheme => Resources.Load<AudioClip>("Sound/UI/Themes/game_loop");
+        private IGameStateController _gameStateController;
 
         void Awake()
         {
             _spawner = GetComponent<BlockSpawner>();
             _soundPlayer = SimpleServiceLocator.Resolve<ISoundPlayer>();
+            _gameStateController = SimpleServiceLocator.Resolve<IGameStateController>();
         }
 
         void Start()
         {   
             LoadLevel(GetLevel0());
-            
+            _gameStateController.SetState(GameState.Paused);
             _soundPlayer.PlayMusic(GetSceneMusicTheme);
         }
 

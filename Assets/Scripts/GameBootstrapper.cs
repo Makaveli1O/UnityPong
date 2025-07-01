@@ -16,7 +16,6 @@ public class GameBootstrapper : MonoBehaviour
 
     [SerializeField] private GameHandler _gameHandlerPrefab;
     private GameHandler _gameHandlerInstance;
-
     void Awake()
     {
         _blockFactory = GetComponent<BlockFactory>();

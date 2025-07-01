@@ -44,5 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 808c54a751cc693419c3bea35b881e36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _winScene: WinScene
-  _gameOverScene: GameOverScene
+  _pausePanelPrefab: {fileID: 8183353118990626574, guid: 32b5c49ff576d0c4c8f367081c627a3f, type: 3}

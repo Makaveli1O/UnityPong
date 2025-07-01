@@ -5,6 +5,7 @@ namespace Assets.Scripts.Blocks
 {
     public class Block : MonoBehaviour
     {
+        [SerializeField] private AudioClip _destroyClip;
         [SerializeField] public GameObject shrapnelPrefab;
         public BlockData Data { get; private set; }
         private SpriteRenderer _spriteRenderer;

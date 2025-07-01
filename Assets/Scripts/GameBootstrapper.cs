@@ -3,6 +3,7 @@ using Assets.Scripts.SharedKernel;
 using Assets.Scripts.Blocks;
 using Assets.Scripts.GameHandler;
 using Assets.Scripts.Level;
+using Assets.Scripts.SharedKernel;
 
 
 public class GameBootstrapper : MonoBehaviour
@@ -11,6 +12,7 @@ public class GameBootstrapper : MonoBehaviour
     private BlockWinConditionCounter _blockCounter;
     private SceneLoader _sceneLoader;
     private LevelDesigner _levelDesigner;
+    [SerializeField] private SoundPlayer _soundPlayer;
 
     void Awake()
     {
@@ -18,6 +20,7 @@ public class GameBootstrapper : MonoBehaviour
         _blockCounter = new BlockWinConditionCounter();
         _sceneLoader = GetComponent<SceneLoader>();
         _levelDesigner = GetComponent<LevelDesigner>();
+
 
         RegisterServices();
     }
@@ -29,5 +32,6 @@ public class GameBootstrapper : MonoBehaviour
         SimpleServiceLocator.Register<IGameWinCondition>(_blockCounter);
         SimpleServiceLocator.Register<ISceneLoader>(_sceneLoader);
         SimpleServiceLocator.Register<ILevelDesigner>(_levelDesigner);
+        SimpleServiceLocator.Register<ISoundPlayer>(_soundPlayer);
     }
 }

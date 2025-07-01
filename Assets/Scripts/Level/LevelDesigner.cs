@@ -1,4 +1,5 @@
 using Assets.Scripts.Blocks;
+using Assets.Scripts.SharedKernel;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -7,15 +8,20 @@ namespace Assets.Scripts.Level
     public class LevelDesigner : MonoBehaviour, ILevelDesigner
     {
         private BlockSpawner _spawner;
+        private ISoundPlayer _soundPlayer;
+        public AudioClip GetSceneMusicTheme => Resources.Load<AudioClip>("Sound/UI/Themes/game_loop");
 
         void Awake()
         {
             _spawner = GetComponent<BlockSpawner>();
+            _soundPlayer = SimpleServiceLocator.Resolve<ISoundPlayer>();
+            
         }
 
         void Start()
         {
             LoadLevel(GetLevel0());
+            _soundPlayer.PlayMusic(GetSceneMusicTheme);
         }
 
         public LevelData GetLevel0()

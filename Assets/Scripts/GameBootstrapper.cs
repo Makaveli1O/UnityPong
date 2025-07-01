@@ -3,7 +3,6 @@ using Assets.Scripts.SharedKernel;
 using Assets.Scripts.Blocks;
 using Assets.Scripts.GameHandler;
 using Assets.Scripts.Level;
-using Assets.Scripts.SharedKernel;
 
 
 public class GameBootstrapper : MonoBehaviour

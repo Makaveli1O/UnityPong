@@ -15,12 +15,12 @@ namespace Assets.Scripts.Level
         {
             _spawner = GetComponent<BlockSpawner>();
             _soundPlayer = SimpleServiceLocator.Resolve<ISoundPlayer>();
-            
         }
 
         void Start()
-        {
+        {   
             LoadLevel(GetLevel0());
+            
             _soundPlayer.PlayMusic(GetSceneMusicTheme);
         }
 

@@ -2,7 +2,6 @@ namespace Assets.Scripts.Level
 {
     using UnityEngine;
     using Assets.Scripts.SharedKernel;
-    using Assets.Scripts.SharedKernel;
 
     public class LevelBootstrapper : MonoBehaviour
     {

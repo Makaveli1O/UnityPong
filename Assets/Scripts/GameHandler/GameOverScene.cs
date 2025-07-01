@@ -1,6 +1,5 @@
 using Assets.Scripts.GameHandler;
 using Assets.Scripts.SharedKernel;
-using Assets.Scripts.SharedKernel;
 using UnityEngine;
 
 public class GameOverScreen : MonoBehaviour

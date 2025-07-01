@@ -1,5 +1,4 @@
 using Assets.Scripts.SharedKernel;
-using Assets.Scripts.SharedKernel;
 using UnityEngine;
 
 namespace Assets.Scripts.GameHandler

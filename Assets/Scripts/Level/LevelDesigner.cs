@@ -1,6 +1,5 @@
 using Assets.Scripts.Blocks;
 using Assets.Scripts.SharedKernel;
-using Assets.Scripts.SharedKernel;
 using Unity.Mathematics;
 using UnityEngine;
 

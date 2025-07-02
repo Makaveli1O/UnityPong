@@ -3,7 +3,7 @@ using Assets.Scripts.SharedKernel;
 using UnityEngine;
 namespace Assets.Scripts.Blocks
 {
-    public class ExplodeBehaviour : MonoBehaviour, ICollisionBehaviour, IDestructionBehaviour
+    public class ExplodeBehaviour : MonoBehaviour, ICollisionBehaviour, IDestructableBehaviour
     {
         private AudioClip _explodeClip;
         private AudioClip _blip;

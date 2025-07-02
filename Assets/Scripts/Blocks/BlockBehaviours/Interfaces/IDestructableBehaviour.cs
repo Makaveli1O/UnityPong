@@ -1,6 +1,6 @@
 namespace Assets.Scripts.Blocks
 {
-    public interface IDestructionBehaviour
+    public interface IDestructableBehaviour
     {
         void Destroy(Block context);
     }

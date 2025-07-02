@@ -3,6 +3,7 @@ using Assets.Scripts.GameHandler;
 using Assets.Scripts.SharedKernel;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Diagnostics;
 
 namespace Assets.Scripts.Level
 {
@@ -60,7 +61,19 @@ namespace Assets.Scripts.Level
                     behavioursBlueBasic
                 )
                 .WithBlock(
-                    new int2(-3, -4),
+                    Utils2D.PositionConvertor2D.ToInt2(Utils2D.GetAxisAlignedVisiblePoint(Vector3.zero)),
+                    behavioursRedBasic
+                )
+                .WithBlock(
+                    Utils2D.PositionConvertor2D.ToInt2(Utils2D.GetAxisAlignedVisiblePoint(Vector3.zero)),
+                    behavioursRedBasic
+                )
+                .WithBlock(
+                    Utils2D.PositionConvertor2D.ToInt2(Utils2D.GetAxisAlignedVisiblePoint(Vector3.zero)),
+                    behavioursRedBasic
+                )
+                .WithBlock(
+                    Utils2D.PositionConvertor2D.ToInt2(Utils2D.GetAxisAlignedVisiblePoint(Vector3.zero)),
                     behavioursRedBasic
                 )
                 .WithBlock(

@@ -7,37 +7,42 @@ public class RotatingPaddle : MonoBehaviour, IPaddleBehaviour
     private const float rotateLeftAngle = -45f;
     private const float rotateRightAngle = 45f;
     private const float speed = 5f;
-    private float _paddleAngle = 0f;
     public float Speed => speed;
+
+    private Rigidbody2D _rb;
+    private float _targetAngle = defaultAngle;
+
+    void Awake()
+    {
+        _rb = transform.parent.GetComponent<Rigidbody2D>();
+    }
+
     public void Action(InputAction.CallbackContext ctx)
     {
         Vector2 rotationInput = ctx.ReadValue<Vector2>();
+
         if (ctx.performed)
         {
-            RotatePaddle(rotationInput);
+            if (rotationInput == Vector2.right)
+                _targetAngle = rotateRightAngle;
+            else if (rotationInput == Vector2.left)
+                _targetAngle = rotateLeftAngle;
         }
         else if (ctx.canceled)
         {
-            RotatePaddle(defaultAngle);
+            _targetAngle = defaultAngle;
         }
     }
 
-    private void RotatePaddle(Vector2 rotationInput)
+    void FixedUpdate()
     {
-        if (rotationInput.Equals(Vector2.right))
-        {
-            _paddleAngle = rotateRightAngle;
-        }
-        else if (rotationInput.Equals(Vector2.left))
-        {
-            _paddleAngle = rotateLeftAngle;
-        }
+        // Smoothly rotate towards target angle
+        float newAngle = Mathf.MoveTowardsAngle(
+            _rb.rotation,
+            _targetAngle,
+            speed * 100f * Time.fixedDeltaTime
+        );
 
-        transform.rotation = Quaternion.Euler(0, 0, _paddleAngle);
-    }
-
-    private void RotatePaddle(float angle)
-    {
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        _rb.MoveRotation(newAngle);
     }
 }

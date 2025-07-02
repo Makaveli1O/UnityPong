@@ -5329,6 +5329,10 @@ PrefabInstance:
       value: Player1
       objectReference: {fileID: 0}
     - target: {fileID: 6201673107845914765, guid: de0992f14535cb64d8660de9baeba94b, type: 3}
+      propertyPath: acceleration
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6201673107845914765, guid: de0992f14535cb64d8660de9baeba94b, type: 3}
       propertyPath: _upwardsParticles
       value: 
       objectReference: {fileID: 1743626234}

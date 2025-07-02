@@ -11,7 +11,8 @@ public class PlayerController : MonoBehaviour
     private PlayerControls _playerControls;
     private Vector2 _movementVector;
     [SerializeField] private float acceleration = 30f;
-
+    [SerializeField] private ParticleSystem _upwardsParticles;
+    [SerializeField] private ParticleSystem _downwardsParticles;
     private float _verticalBoundary;
     private Rigidbody2D _rb;
 
@@ -48,9 +49,25 @@ public class PlayerController : MonoBehaviour
     public void OnMove(InputAction.CallbackContext ctx)
     {
         if (ctx.performed)
+        {
             _movementVector = ctx.ReadValue<Vector2>();
+            if (_movementVector.Equals(Vector2.down))
+            {
+                _upwardsParticles.Play();
+                _downwardsParticles.Stop();
+            }
+            else if (_movementVector.Equals(Vector2.up))
+            {
+                _upwardsParticles.Stop();
+                _downwardsParticles.Play();
+            }
+        }
         else if (ctx.canceled)
+        {
             _movementVector = Vector2.zero;
+            _upwardsParticles.Stop();
+            _downwardsParticles.Stop();
+        }
     }
 
     public void OnRotate(InputAction.CallbackContext ctx)

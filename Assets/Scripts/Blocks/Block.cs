@@ -40,7 +40,7 @@ namespace Assets.Scripts.Blocks
                 behaviour.OnUpdateExecute(this);
         }
 
-        private void OnCollisionExit2D(Collision2D other)
+        private void OnCollisionEnter2D(Collision2D other)
         {
             foreach (var behaviour in _collisionBehaviours)
                 behaviour.OnCollisionExecute(this, other);

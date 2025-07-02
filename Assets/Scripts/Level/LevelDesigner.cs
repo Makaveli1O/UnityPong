@@ -1,7 +1,9 @@
 using Assets.Scripts.Blocks;
+using Assets.Scripts.GameHandler;
 using Assets.Scripts.SharedKernel;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Diagnostics;
 
 namespace Assets.Scripts.Level
 {
@@ -10,17 +12,19 @@ namespace Assets.Scripts.Level
         private BlockSpawner _spawner;
         private ISoundPlayer _soundPlayer;
         public AudioClip GetSceneMusicTheme => Resources.Load<AudioClip>("Sound/UI/Themes/game_loop");
+        private IGameStateController _gameStateController;
 
         void Awake()
         {
             _spawner = GetComponent<BlockSpawner>();
             _soundPlayer = SimpleServiceLocator.Resolve<ISoundPlayer>();
-            
+            _gameStateController = SimpleServiceLocator.Resolve<IGameStateController>();
         }
 
         void Start()
-        {
+        {   
             LoadLevel(GetLevel0());
+            _gameStateController.SetState(GameState.Paused);
             _soundPlayer.PlayMusic(GetSceneMusicTheme);
         }
 
@@ -57,7 +61,19 @@ namespace Assets.Scripts.Level
                     behavioursBlueBasic
                 )
                 .WithBlock(
-                    new int2(-3, -4),
+                    Utils2D.PositionConvertor2D.ToInt2(Utils2D.GetAxisAlignedVisiblePoint(Vector3.zero)),
+                    behavioursRedBasic
+                )
+                .WithBlock(
+                    Utils2D.PositionConvertor2D.ToInt2(Utils2D.GetAxisAlignedVisiblePoint(Vector3.zero)),
+                    behavioursRedBasic
+                )
+                .WithBlock(
+                    Utils2D.PositionConvertor2D.ToInt2(Utils2D.GetAxisAlignedVisiblePoint(Vector3.zero)),
+                    behavioursRedBasic
+                )
+                .WithBlock(
+                    Utils2D.PositionConvertor2D.ToInt2(Utils2D.GetAxisAlignedVisiblePoint(Vector3.zero)),
                     behavioursRedBasic
                 )
                 .WithBlock(

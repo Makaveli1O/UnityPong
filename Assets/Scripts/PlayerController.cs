@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private GameObject _paddlePrefab;
@@ -9,37 +10,38 @@ public class PlayerController : MonoBehaviour
     private IPaddleBehaviour _paddle;
     private PlayerControls _playerControls;
     private Vector2 _movementVector;
-
+    [SerializeField] private float acceleration = 30f;
+    [SerializeField] private PlayerParticleController _ppc;
     private float _verticalBoundary;
+    private Rigidbody2D _rb;
 
     private void Awake()
     {
         _playerControls = new PlayerControls();
+        _rb = GetComponent<Rigidbody2D>();
+        _rb.gravityScale = 0f;
+        _rb.freezeRotation = true;
     }
 
     void Start()
     {
         _verticalBoundary = CalculateYBoundary();
+
         _paddleInstance = Instantiate(_paddlePrefab, transform.position, Quaternion.identity, transform);
         _paddle = _paddleInstance.GetComponent<IPaddleBehaviour>();
 
         if (_paddle == null)
-        {
-            //Throw exception if paddle prefab is not assigned or component is not present
             throw new Exception("IPaddleBehaviour not implemented on the paddle GameObject.");
-        }
-
     }
 
-    private void Update()
+    void FixedUpdate()
     {
-        // Movement
-        Vector2 currentPosition = transform.position;
+        float targetYSpeed = _movementVector.y * _paddle.Speed;
+        float currentYSpeed = _rb.linearVelocity.y;
 
-        currentPosition.y += _movementVector.y * _paddle.Speed * Time.deltaTime;
-        transform.position = currentPosition;
+        float newYSpeed = Mathf.MoveTowards(currentYSpeed, targetYSpeed, acceleration * Time.fixedDeltaTime);
+        _rb.linearVelocity = new Vector2(0f, newYSpeed);
 
-        // Boundary check
         ClampToVerticalBounds();
     }
 
@@ -48,10 +50,19 @@ public class PlayerController : MonoBehaviour
         if (ctx.performed)
         {
             _movementVector = ctx.ReadValue<Vector2>();
+            if (_movementVector.Equals(Vector2.down))
+            {
+                _ppc.StartUpwardThrust();
+            }
+            else if (_movementVector.Equals(Vector2.up))
+            {
+                _ppc.StartDownwardThrust();
+            }
         }
         else if (ctx.canceled)
         {
             _movementVector = Vector2.zero;
+            _ppc.StopBothThrusts();
         }
     }
 
@@ -62,10 +73,11 @@ public class PlayerController : MonoBehaviour
 
     private void ClampToVerticalBounds()
     {
-        var pos = transform.position;
+        Vector3 pos = transform.position;
         pos.y = Mathf.Clamp(pos.y, -_verticalBoundary, _verticalBoundary);
         transform.position = pos;
     }
+
 
     private float CalculateYBoundary()
     {

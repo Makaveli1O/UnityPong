@@ -1,16 +1,20 @@
+using System;
 using Assets.Scripts.Blocks;
 using Assets.Scripts.SharedKernel;
 using UnityEngine;
 
 namespace Assets.Scripts.GameHandler
 {
-    public class GameHandler : MonoBehaviour
+    public class GameHandler : MonoBehaviour, IGameStateController
     {
         private string _winScene => SceneNames.Win;
         private string _gameOverScene => SceneNames.GameOver;
+        public GameState CurrentState => _currentState;
         private IGameWinCondition _winCondition;
         private GameState _currentState;
         private ISceneLoader _sceneLoader;
+
+        public event Action<GameState> OnStateChanged;
 
         private void Awake()
         {

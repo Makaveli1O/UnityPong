@@ -2,17 +2,23 @@ namespace Assets.Scripts.Level
 {
     using UnityEngine;
     using Assets.Scripts.SharedKernel;
-    using Assets.Scripts.SharedKernel;
 
     public class LevelBootstrapper : MonoBehaviour
     {
         [SerializeField] private GameObject _levelDesignerPrefab;
+        [SerializeField] private GameObject _pausePanelPrefab;
+        private IPauseController _pauseController;
 
         void Awake()
         {
             Instantiate(_levelDesignerPrefab);
-            var designer = _levelDesignerPrefab.GetComponent<LevelDesigner>();
+            ILevelDesigner designer = _levelDesignerPrefab.GetComponent<ILevelDesigner>();
+
+            Instantiate(_pausePanelPrefab);
+            IPauseController pausePanel = _pausePanelPrefab.GetComponent<IPauseController>();
+
             SimpleServiceLocator.Register<ILevelDesigner>(designer);
+            SimpleServiceLocator.Register<IPauseController>(pausePanel);
         }
     }
 }

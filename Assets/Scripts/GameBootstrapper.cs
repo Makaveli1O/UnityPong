@@ -11,8 +11,11 @@ public class GameBootstrapper : MonoBehaviour
     private BlockWinConditionCounter _blockCounter;
     private SceneLoader _sceneLoader;
     private LevelDesigner _levelDesigner;
-    [SerializeField] private SoundPlayer _soundPlayer;
+    [SerializeField] private SoundPlayer _soundPlayerPrefab;
+    private SoundPlayer _soundPlayerInstance;
 
+    [SerializeField] private GameHandler _gameHandlerPrefab;
+    private GameHandler _gameHandlerInstance;
     void Awake()
     {
         _blockFactory = GetComponent<BlockFactory>();
@@ -22,6 +25,11 @@ public class GameBootstrapper : MonoBehaviour
 
 
         RegisterServices();
+
+        _gameHandlerInstance = Instantiate(_gameHandlerPrefab);
+        _soundPlayerInstance = Instantiate(_soundPlayerPrefab);
+
+        RegisterInstantiatedServices();
     }
 
     private void RegisterServices()
@@ -31,6 +39,11 @@ public class GameBootstrapper : MonoBehaviour
         SimpleServiceLocator.Register<IGameWinCondition>(_blockCounter);
         SimpleServiceLocator.Register<ISceneLoader>(_sceneLoader);
         SimpleServiceLocator.Register<ILevelDesigner>(_levelDesigner);
-        SimpleServiceLocator.Register<ISoundPlayer>(_soundPlayer);
+    }
+
+    private void RegisterInstantiatedServices()
+    {
+        SimpleServiceLocator.Register<IGameStateController>(_gameHandlerInstance);
+        SimpleServiceLocator.Register<ISoundPlayer>(_soundPlayerInstance);
     }
 }

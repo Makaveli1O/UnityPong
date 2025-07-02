@@ -1,5 +1,4 @@
 using Assets.Scripts.SharedKernel;
-using Assets.Scripts.SharedKernel;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using Vector2 = UnityEngine.Vector2;

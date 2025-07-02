@@ -1,10 +1,9 @@
 using System.Collections;
 using Assets.Scripts.SharedKernel;
-using Assets.Scripts.SharedKernel;
 using UnityEngine;
 namespace Assets.Scripts.Blocks
 {
-    public class ExplodeBehaviour : MonoBehaviour, ICollisionBehaviour
+    public class ExplodeBehaviour : MonoBehaviour, ICollisionBehaviour, IDestructableBehaviour
     {
         private AudioClip _explodeClip;
         private AudioClip _blip;
@@ -65,9 +64,13 @@ namespace Assets.Scripts.Blocks
                 }
                 Destroy(shrapnel, 2f);
             }
-
-            Destroy(ctx.gameObject);
             _soundPlayer.PlaySfx(_explodeClip);
+            Destroy(ctx.gameObject);
+        }
+
+        public void Destroy(Block context)
+        {
+            Destroy(context.gameObject);
         }
     }
 }

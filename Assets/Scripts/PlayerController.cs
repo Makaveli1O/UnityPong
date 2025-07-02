@@ -11,8 +11,7 @@ public class PlayerController : MonoBehaviour
     private PlayerControls _playerControls;
     private Vector2 _movementVector;
     [SerializeField] private float acceleration = 30f;
-    [SerializeField] private ParticleSystem _upwardsParticles;
-    [SerializeField] private ParticleSystem _downwardsParticles;
+    [SerializeField] private PlayerParticleController _ppc;
     private float _verticalBoundary;
     private Rigidbody2D _rb;
 
@@ -53,20 +52,17 @@ public class PlayerController : MonoBehaviour
             _movementVector = ctx.ReadValue<Vector2>();
             if (_movementVector.Equals(Vector2.down))
             {
-                _upwardsParticles.Play();
-                _downwardsParticles.Stop();
+                _ppc.StartUpwardThrust();
             }
             else if (_movementVector.Equals(Vector2.up))
             {
-                _upwardsParticles.Stop();
-                _downwardsParticles.Play();
+                _ppc.StartDownwardThrust();
             }
         }
         else if (ctx.canceled)
         {
             _movementVector = Vector2.zero;
-            _upwardsParticles.Stop();
-            _downwardsParticles.Stop();
+            _ppc.StopBothThrusts();
         }
     }
 

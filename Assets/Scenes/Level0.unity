@@ -5324,10 +5324,18 @@ PrefabInstance:
       propertyPath: m_GravityScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 702405139730017999, guid: de0992f14535cb64d8660de9baeba94b, type: 3}
+      propertyPath: m_Name
+      value: ParticleController
+      objectReference: {fileID: 0}
     - target: {fileID: 4461980217579551140, guid: de0992f14535cb64d8660de9baeba94b, type: 3}
       propertyPath: m_Name
       value: Player1
       objectReference: {fileID: 0}
+    - target: {fileID: 6201673107845914765, guid: de0992f14535cb64d8660de9baeba94b, type: 3}
+      propertyPath: _ppc
+      value: 
+      objectReference: {fileID: 1549029793}
     - target: {fileID: 6201673107845914765, guid: de0992f14535cb64d8660de9baeba94b, type: 3}
       propertyPath: acceleration
       value: 20
@@ -5384,6 +5392,9 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 702405139730017999, guid: de0992f14535cb64d8660de9baeba94b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1549029793}
     - targetCorrespondingSourceObject: {fileID: 6891946995126851769, guid: de0992f14535cb64d8660de9baeba94b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1743626234}
@@ -5397,6 +5408,25 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 881670178}
   m_SourcePrefab: {fileID: 100100000, guid: de0992f14535cb64d8660de9baeba94b, type: 3}
+--- !u!1 &1549029791 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 702405139730017999, guid: de0992f14535cb64d8660de9baeba94b, type: 3}
+  m_PrefabInstance: {fileID: 1368161340}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1549029793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549029791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d855bfda06d93aa409b3716f21d7b87c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _upwardsParticles: {fileID: 1743626234}
+  _downwardsParticles: {fileID: 881670177}
 --- !u!1001 &1676642274
 PrefabInstance:
   m_ObjectHideFlags: 0

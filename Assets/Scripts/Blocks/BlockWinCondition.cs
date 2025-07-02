@@ -1,3 +1,5 @@
+using Assets.Scripts.SharedKernel;
+using Assets.Scripts.Score;
 namespace Assets.Scripts.Blocks
 {
     public class BlockWinConditionCounter : IGameWinCondition, IBlockCounter
@@ -18,15 +20,19 @@ namespace Assets.Scripts.Blocks
             _initialized = false;
         }
 
-        public void OnBlockSpawned()
+        public void OnBlockSpawned(Block ctx)
         {
+            if (ctx.IsScoreable)
+                _activeBlockCount++;
             _initialized = true;
-            _activeBlockCount++;
+            UnityEngine.Debug.Log(_activeBlockCount);
         }
 
         public void OnBlockDestroyed()
         {
             _activeBlockCount--;
+            SimpleServiceLocator.Resolve<IScoreTracker>().BlockDestroyed();
+            UnityEngine.Debug.Log(_activeBlockCount);
         }
     }
 }

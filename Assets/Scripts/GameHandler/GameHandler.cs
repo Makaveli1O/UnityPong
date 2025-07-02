@@ -1,6 +1,7 @@
 using System;
 using Assets.Scripts.Blocks;
 using Assets.Scripts.SharedKernel;
+using Assets.Scripts.Score;
 using UnityEngine;
 
 namespace Assets.Scripts.GameHandler
@@ -13,6 +14,7 @@ namespace Assets.Scripts.GameHandler
         private IGameWinCondition _winCondition;
         private GameState _currentState;
         private ISceneLoader _sceneLoader;
+        private IScoreTracker _scoreTracker;
 
         public event Action<GameState> OnStateChanged;
 
@@ -20,10 +22,12 @@ namespace Assets.Scripts.GameHandler
         {
             _winCondition = SimpleServiceLocator.Resolve<IGameWinCondition>();
             _sceneLoader = SimpleServiceLocator.Resolve<ISceneLoader>();
+            _scoreTracker = SimpleServiceLocator.Resolve<IScoreTracker>();
         }
 
         private void Start()
         {
+            _scoreTracker.StartTracking();
             SetState(GameState.Playing);
         }
 
@@ -31,6 +35,8 @@ namespace Assets.Scripts.GameHandler
         {
             if (_currentState == GameState.Playing && _winCondition.IsWinConditionMet())
             {
+                _scoreTracker.StopTracking();
+                ScoreKeeper.FinalScore = _scoreTracker.GetFinalScore();
                 SetState(GameState.Win);
             }
         }

@@ -2,7 +2,7 @@ namespace Assets.Scripts.Blocks
 {
     public interface IBlockCounter
     {
-        void OnBlockSpawned();
+        void OnBlockSpawned(Block ctx);
         void OnBlockDestroyed();
     }
 }

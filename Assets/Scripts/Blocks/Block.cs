@@ -11,6 +11,8 @@ namespace Assets.Scripts.Blocks
         private SpriteRenderer _spriteRenderer;
         private readonly List<IUpdateBehaviour> _updateBehaviours = new();
         private readonly List<ICollisionBehaviour> _collisionBehaviours = new();
+        public bool IsScoreable => _destructibleBehaviours != 0;
+        private int _destructibleBehaviours = 0;
 
         public void SetData(BlockData data)
         {
@@ -19,11 +21,13 @@ namespace Assets.Scripts.Blocks
 
         public void AddUpdateBehaviour(IUpdateBehaviour behaviour)
         {
+            if (behaviour is IDestructableBehaviour) _destructibleBehaviours++;
             _updateBehaviours.Add(behaviour);
         }
 
         public void AddCollisionBehaviour(ICollisionBehaviour behaviour)
         {
+            if (behaviour is IDestructableBehaviour) _destructibleBehaviours++;
             _collisionBehaviours.Add(behaviour);
         }
 

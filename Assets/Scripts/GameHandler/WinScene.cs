@@ -1,8 +1,6 @@
 using Assets.Scripts.Score;
 using Assets.Scripts.SharedKernel;
-using UnityEditor.VersionControl;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.GameHandler

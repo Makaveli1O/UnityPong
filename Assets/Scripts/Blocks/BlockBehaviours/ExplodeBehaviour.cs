@@ -11,12 +11,14 @@ namespace Assets.Scripts.Blocks
         private const int _delaySeconds = 2;
         private float _spreadForce = 5f;
         private ISoundPlayer _soundPlayer;
+        private IBlockCounter _blockCounter;
 
         void Awake()
         {
             _soundPlayer = SimpleServiceLocator.Resolve<ISoundPlayer>();
             _explodeClip = Resources.Load<AudioClip>("Sound/Block/explosion");
             _blip = Resources.Load<AudioClip>("Sound/Block/blip");
+            _blockCounter = SimpleServiceLocator.Resolve<IBlockCounter>();
         }
 
         public void OnCollisionExecute(Block context, Collision2D collision)
@@ -65,11 +67,12 @@ namespace Assets.Scripts.Blocks
                 Destroy(shrapnel, 2f);
             }
             _soundPlayer.PlaySfx(_explodeClip);
-            Destroy(ctx.gameObject);
+            DestroyBlock(ctx);
         }
 
-        public void Destroy(Block context)
+        public void DestroyBlock(Block context)
         {
+            _blockCounter.OnBlockDestroyed();
             Destroy(context.gameObject);
         }
     }

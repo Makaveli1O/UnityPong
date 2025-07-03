@@ -38,7 +38,7 @@ namespace Assets.Scripts.Blocks
             );
             block.transform.position = gridPosition;
 
-            _blockCounter.OnBlockSpawned();
+            _blockCounter.OnBlockSpawned(block);
             return block;
         }
 

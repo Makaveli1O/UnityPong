@@ -6,6 +6,7 @@ using Assets.Scripts.SharedKernel;
 using UnityEngine.TestTools;
 using System.Collections;
 using NUnit.Framework.Constraints;
+using Assets.Scripts.Score;
 
 public class GameHandlerTest
 {
@@ -13,14 +14,17 @@ public class GameHandlerTest
     private GameHandler _gameHandler;
     private StubSceneLoader _sceneLoader;
     private StubWinCondition _winCondition;
+    private ScoreTracker _scoreTracker;
 
     [UnitySetUp]
     public IEnumerator SetUp()
     {
         _sceneLoader = new StubSceneLoader();
         _winCondition = new StubWinCondition();
+        _scoreTracker = new();
 
         SimpleServiceLocator.Clear();
+        SimpleServiceLocator.Register<IScoreTracker>(_scoreTracker);
         SimpleServiceLocator.Register<ISceneLoader>(_sceneLoader);
         SimpleServiceLocator.Register<IGameWinCondition>(_winCondition);
 

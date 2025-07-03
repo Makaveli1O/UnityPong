@@ -49,6 +49,13 @@ namespace Assets.Scripts.Blocks
             foreach (var behaviour in _collisionBehaviours)
                 behaviour.OnCollisionExecute(this, other);
         }
+
+        // TODO test function remove
+        void Start()
+        {
+            //foreach (var behaviour in _collisionBehaviours)
+            //    behaviour.OnCollisionExecute(this, null);
+        }
     }
 
 

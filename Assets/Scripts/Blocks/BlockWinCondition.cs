@@ -25,14 +25,12 @@ namespace Assets.Scripts.Blocks
             if (ctx.IsScoreable)
                 _activeBlockCount++;
             _initialized = true;
-            UnityEngine.Debug.Log(_activeBlockCount);
         }
 
         public void OnBlockDestroyed()
         {
             _activeBlockCount--;
             SimpleServiceLocator.Resolve<IScoreTracker>().BlockDestroyed();
-            UnityEngine.Debug.Log(_activeBlockCount);
         }
     }
 }

@@ -15,6 +15,7 @@ namespace Assets.Scripts.GameHandler
         private GameState _currentState;
         private ISceneLoader _sceneLoader;
         private IScoreTracker _scoreTracker;
+        private bool _isScoreTrackingEnabled = false;
 
         public event Action<GameState> OnStateChanged;
 
@@ -27,7 +28,7 @@ namespace Assets.Scripts.GameHandler
 
         private void Start()
         {
-            _scoreTracker.StartTracking();
+            if (_sceneLoader.IsCurrentSceneLevel()) _scoreTracker.StartTracking();
             SetState(GameState.Playing);
         }
 
@@ -35,8 +36,11 @@ namespace Assets.Scripts.GameHandler
         {
             if (_currentState == GameState.Playing && _winCondition.IsWinConditionMet())
             {
-                _scoreTracker.StopTracking();
-                ScoreKeeper.FinalScore = _scoreTracker.GetFinalScore();
+                if (_scoreTracker.IsTrackingEnabled)
+                {
+                    _scoreTracker.StopTracking();
+                    ScoreKeeper.FinalScore = _scoreTracker.GetFinalScore();
+                }
                 SetState(GameState.Win);
             }
         }

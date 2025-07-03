@@ -7,5 +7,6 @@ namespace Assets.Scripts.Score
         void StopTracking();
         int GetFinalScore();
         int CurrentScore { get; }
+        public bool IsTrackingEnabled { get; }
     }
 }

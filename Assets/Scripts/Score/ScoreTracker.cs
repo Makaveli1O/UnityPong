@@ -10,6 +10,7 @@ namespace Assets.Scripts.Score
         private bool _tracking = false;
 
         public int CurrentScore { get; private set; }
+        public bool IsTrackingEnabled => _tracking;
 
         public void StartTracking()
         {

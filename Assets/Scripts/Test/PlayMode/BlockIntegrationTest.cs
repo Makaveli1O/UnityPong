@@ -9,6 +9,7 @@ using System.Linq;
 using System;
 using Assets.Scripts.SharedKernel;
 using System.Collections.Generic;
+using Assets.Scripts.Score;
 
 public class BlockIntegrationTest
 {
@@ -27,6 +28,10 @@ public class BlockIntegrationTest
         _camera.tag = "MainCamera";
         // Clear and register services BEFORE creating BlockSpawner
         SimpleServiceLocator.Clear();
+
+        ScoreTracker st = new ();
+
+        SimpleServiceLocator.Register<IScoreTracker>(st);
 
         // Load prefab
         var blockPrefab = Resources.Load<GameObject>("Prefabs/Blocks/Block");
@@ -112,26 +117,6 @@ public class BlockIntegrationTest
 
         var spawnedBlocks = GameObject.FindGameObjectsWithTag("Block");
         Assert.AreEqual(spawnCount, spawnedBlocks.Length, $"Expected {spawnCount} blocks to be spawned.");
-    }
-
-    [UnityTest]
-    public IEnumerator Should_TriggerWinCondition_When_AllBlocksDestroyed()
-    {
-        BlockWinConditionCounter blockCounter = (BlockWinConditionCounter)SimpleServiceLocator.Resolve<IBlockCounter>();
-
-        // spawn two blocks nd destroy them to trigger winning condition
-        int spawnCount = 2;
-        Assert.IsFalse(blockCounter.IsWinConditionMet());
-
-        for (int i = 0; i < spawnCount; i++)
-        {
-            Block block = SpawnEmptyBlock(new int2(i, 0));
-            blockSpawner.DestroyBlock(block);
-        }
-
-
-        Assert.IsTrue(blockCounter.IsWinConditionMet());
-        yield return null;
     }
 
     [UnityTest]

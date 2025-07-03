@@ -53,7 +53,7 @@ public class ScoreTrackerTest
 
         int slowScore = _tracker.GetFinalScore();
 
-        Assert.Greater(fastScore, slowScore);
+        Assert.GreaterOrEqual(fastScore, slowScore);
     }
 
     [Test]

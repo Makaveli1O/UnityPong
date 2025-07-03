@@ -3,7 +3,6 @@ using Assets.Scripts.GameHandler;
 using Assets.Scripts.SharedKernel;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Diagnostics;
 
 namespace Assets.Scripts.Level
 {
@@ -23,64 +22,109 @@ namespace Assets.Scripts.Level
 
         void Start()
         {   
-            LoadLevel(GetLevel0());
+            LoadLevel(GetLevelData(GameStateStorage.CurrentLevel));
             _gameStateController.SetState(GameState.Paused);
             _soundPlayer.PlayMusic(GetSceneMusicTheme);
         }
 
-        public LevelData GetLevel0()
+        public LevelData GetLevelData(int levelIndex)
         {
-            var behavioursBlueBasic = new BehaviourBuilder()
+            return levelIndex switch
+            {
+                1 => GetLevel1(),
+                2 => GetLevel2(),
+                _ => GetLevel1()
+            };
+        }
+
+        private LevelData GetLevel1()
+        {
+            var slowMover = new BehaviourBuilder()
                 .Add<MoveBehaviour, MoveConfig>(
-                    new MoveConfig(
-                        1.0f,
-                        new Vector3(-3f, -3f, 0f),
-                        new Vector3(1f, -3f, 0f)
-                    )
+                    new MoveConfig(1.0f, new Vector3(-4, 4, 0), new Vector3(4, 4, 0))
                 )
                 .Build();
 
-            var behavioursRedBasic = new BehaviourBuilder()
+            var stationaryExploder = new BehaviourBuilder()
                 .AddNonConfigurable<ExplodeBehaviour>()
                 .Build();
-                
-            var combinedBasicBehaviours = new BehaviourBuilder()
+
+            var fastCombo = new BehaviourBuilder()
                 .Add<MoveBehaviour, MoveConfig>(
-                    new MoveConfig(
-                        10.0f,
-                        new Vector3(3f, 3f, 0f),
-                        new Vector3(1f, 3f, 0f)
-                    )
+                    new MoveConfig(4.0f, new Vector3(-2, 0, 0), new Vector3(2, 0, 0))
                 )
                 .AddNonConfigurable<ExplodeBehaviour>()
                 .Build();
 
-            return new LevelBuilder()
-                .WithBlock(
-                    new int2(3, 4),
-                    behavioursBlueBasic
-                )
-                .WithBlock(
-                    Utils2D.PositionConvertor2D.ToInt2(Utils2D.GetAxisAlignedVisiblePoint(Vector3.zero)),
-                    behavioursRedBasic
-                )
-                .WithBlock(
-                    Utils2D.PositionConvertor2D.ToInt2(Utils2D.GetAxisAlignedVisiblePoint(Vector3.zero)),
-                    behavioursRedBasic
-                )
-                .WithBlock(
-                    Utils2D.PositionConvertor2D.ToInt2(Utils2D.GetAxisAlignedVisiblePoint(Vector3.zero)),
-                    behavioursRedBasic
-                )
-                .WithBlock(
-                    Utils2D.PositionConvertor2D.ToInt2(Utils2D.GetAxisAlignedVisiblePoint(Vector3.zero)),
-                    behavioursRedBasic
-                )
-                .WithBlock(
-                    new int2(-1,-1),
-                    combinedBasicBehaviours
+            var builder = new LevelBuilder();
+
+            // Outer slow movers (top & bottom rows)
+            for (int x = -4; x <= 4; x += 2)
+            {
+                builder.WithBlock(new int2(x, 4), slowMover);
+                builder.WithBlock(new int2(x, -4), slowMover);
+            }
+
+            // Middle stationary exploders (sides)
+            for (int y = -2; y <= 2; y += 2)
+            {
+                builder.WithBlock(new int2(-4, y), stationaryExploder);
+                builder.WithBlock(new int2(4, y), stationaryExploder);
+            }
+
+            // Inner fast combined
+            builder.WithBlock(new int2(0, 0), fastCombo);
+            builder.WithBlock(new int2(-2, 0), fastCombo);
+            builder.WithBlock(new int2(2, 0), fastCombo);
+
+            return builder.Build();
+        }
+
+        private LevelData GetLevel2()
+        {
+            var diagonalMover = new BehaviourBuilder()
+                .Add<MoveBehaviour, MoveConfig>(
+                    new MoveConfig(2.5f, new Vector3(-3, -3, 0), new Vector3(3, 3, 0))
                 )
                 .Build();
+
+            var verticalMover = new BehaviourBuilder()
+                .Add<MoveBehaviour, MoveConfig>(
+                    new MoveConfig(3f, new Vector3(0, -4, 0), new Vector3(0, 4, 0))
+                )
+                .Build();
+
+            var stationaryExploder = new BehaviourBuilder()
+                .AddNonConfigurable<ExplodeBehaviour>()
+                .Build();
+
+            var comboFast = new BehaviourBuilder()
+                .Add<MoveBehaviour, MoveConfig>(
+                    new MoveConfig(4.5f, new Vector3(-2, 0, 0), new Vector3(2, 0, 0))
+                )
+                .AddNonConfigurable<ExplodeBehaviour>()
+                .Build();
+
+            var builder = new LevelBuilder();
+
+            // Diagonal arms
+            builder.WithBlock(new int2(-3, -3), diagonalMover);
+            builder.WithBlock(new int2(3, 3), diagonalMover);
+            builder.WithBlock(new int2(-3, 3), diagonalMover);
+            builder.WithBlock(new int2(3, -3), diagonalMover);
+
+            // Center fast combo
+            builder.WithBlock(new int2(0, 0), comboFast);
+
+            // Vertical cross (exploders)
+            builder.WithBlock(new int2(0, 2), stationaryExploder);
+            builder.WithBlock(new int2(0, -2), stationaryExploder);
+
+            // Horizontal cross (movers)
+            builder.WithBlock(new int2(-2, 0), verticalMover);
+            builder.WithBlock(new int2(2, 0), verticalMover);
+
+            return builder.Build();
         }
 
         public void LoadLevel(LevelData levelData)

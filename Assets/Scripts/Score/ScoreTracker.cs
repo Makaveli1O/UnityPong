@@ -4,17 +4,16 @@ namespace Assets.Scripts.Score
 {
     public class ScoreTracker : MonoBehaviour, IScoreTracker
     {
-        private int _destroyedBlocks = 0;
         private float _startTime;
-        private float _endTime;
-        private bool _tracking = false;
+        private bool _tracking;
+        private int _score;
 
-        public int CurrentScore { get; private set; }
+        public int CurrentScore => _score;
         public bool IsTrackingEnabled => _tracking;
 
         public void StartTracking()
         {
-            _destroyedBlocks = 0;
+            _score = 0;
             _startTime = Time.time;
             _tracking = true;
         }
@@ -22,19 +21,21 @@ namespace Assets.Scripts.Score
         public void BlockDestroyed()
         {
             if (!_tracking) return;
-            _destroyedBlocks++;
+
+            float timeSinceStart = Time.time - _startTime;
+
+            int basePoints = 100;
+            float bonus = Mathf.Clamp(1000f / Mathf.Max(1f, timeSinceStart), 0, 500); // Optional cap on bonus
+            int total = Mathf.RoundToInt(basePoints + bonus);
+
+            _score += total;
         }
 
         public void StopTracking()
         {
             _tracking = false;
-            _endTime = Time.time;
-
-            float duration = Mathf.Max(1f, _endTime - _startTime);
-            float speedBonus = 10000f / duration;
-            CurrentScore = Mathf.RoundToInt(_destroyedBlocks * 100 + speedBonus);
         }
 
-        public int GetFinalScore() => CurrentScore;
+        public int GetFinalScore() => _score;
     }
 }

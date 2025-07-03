@@ -15,8 +15,6 @@ namespace Assets.Scripts.GameHandler
         private GameState _currentState;
         private ISceneLoader _sceneLoader;
         private IScoreTracker _scoreTracker;
-        private bool _isScoreTrackingEnabled = false;
-
         public event Action<GameState> OnStateChanged;
 
         private void Awake()

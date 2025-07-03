@@ -1,5 +1,6 @@
 using Assets.Scripts.Score;
 using Assets.Scripts.SharedKernel;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
@@ -10,14 +11,14 @@ namespace Assets.Scripts.GameHandler
     {
         private ISceneLoader _sceneLoader;
         private ISoundPlayer _soundPlayer;
-        private IScoreTracker _scoreTracker;
-        private string GetInitialSceneName => SceneNames.Level0;
+        private IGameStateController _gameHandler;
         public AudioClip GetSceneMusicTheme => Resources.Load<AudioClip>("Sound/UI/Themes/win_game");
         [SerializeField] private Text _text;
         void Awake()
         {
             _sceneLoader = SimpleServiceLocator.Resolve<ISceneLoader>();
             _soundPlayer = SimpleServiceLocator.Resolve<ISoundPlayer>();
+            _gameHandler = SimpleServiceLocator.Resolve<IGameStateController>();
         }
 
         void Start()
@@ -29,6 +30,12 @@ namespace Assets.Scripts.GameHandler
         public void LoadMainMenu()
         {
             _sceneLoader.LoadScene(SceneNames.MainMenu);
+        }
+
+        public void OnContinueClicked()
+        {
+            GameStateStorage.CurrentLevel++;
+            _sceneLoader.LoadScene(SceneNames.Level0);
         }
     }
 }

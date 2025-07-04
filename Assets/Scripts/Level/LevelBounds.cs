@@ -1,4 +1,5 @@
 using Assets.Scripts.GameHandler;
+using TMPro;
 using UnityEngine;
 
 public class LevelBounds : MonoBehaviour
@@ -17,6 +18,7 @@ public class LevelBounds : MonoBehaviour
     private float _bottom = 0f;
     private float _width = 0f;
     private float _height = 0f;
+    [SerializeField] private Sprite _wallSprite;
 
     void Start()
     {
@@ -40,9 +42,11 @@ public class LevelBounds : MonoBehaviour
     {
         InitializeLevelBounds();
 
+        float hudOffsetInUnits = 50f * Camera.main.orthographicSize * 2f / Screen.height;
+
         CreateWall(
             new Vector2((_left + _right) / 2f,
-            _top + _wallThickness / 2f),
+            _top + _wallThickness / 2f - hudOffsetInUnits),
             new Vector2(_width, _wallThickness),
             WallScreenPosition.Top
         );
@@ -95,5 +99,10 @@ public class LevelBounds : MonoBehaviour
         collider.isTrigger = false;
 
         wall.AddComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+
+        var sr = wall.AddComponent<SpriteRenderer>();
+        sr.sprite = _wallSprite;
+        sr.drawMode = SpriteDrawMode.Sliced;
+        sr.color = Color.white;
     }
 }
